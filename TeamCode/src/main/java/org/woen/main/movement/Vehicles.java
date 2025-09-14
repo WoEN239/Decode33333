@@ -1,8 +1,6 @@
 package org.woen.main.movement;
 
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
@@ -11,7 +9,6 @@ import org.woen.core.utils.InitializableWith;
 
 public final class Vehicles implements InitializableWith<HardwareMap> {
     private static final Vehicles INSTANCE = new Vehicles();
-
 
     private final Motor leftFrontMotor;
     private final Motor rightFrontMotor;
@@ -26,13 +23,12 @@ public final class Vehicles implements InitializableWith<HardwareMap> {
         rightBackMotor = new Motor("right_back_vehicle_motor");
     }
 
-    @NonNull
     public static Vehicles getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public void initialize(@NonNull HardwareMap hardwareMap) {
+    public void initialize(HardwareMap hardwareMap) {
         leftFrontMotor.initialize(hardwareMap);
         leftBackMotor.initialize(hardwareMap);
         rightFrontMotor.initialize(hardwareMap);
@@ -44,8 +40,8 @@ public final class Vehicles implements InitializableWith<HardwareMap> {
          * motors will rotate backward.
          * We should change their direction.
          */
-        rightFrontMotor.reverseDirection();
-        rightBackMotor.reverseDirection();
+        rightFrontMotor.invertDirection();
+        rightBackMotor.invertDirection();
     }
 
     @Override
@@ -54,12 +50,5 @@ public final class Vehicles implements InitializableWith<HardwareMap> {
                 && rightFrontMotor.isInitialized()
                 && leftBackMotor.isInitialized()
                 && rightBackMotor.isInitialized();
-    }
-
-    public void moveLinearly(double power) {
-        leftFrontMotor.setPower(power);
-        leftBackMotor.setPower(power);
-        rightFrontMotor.setPower(power);
-        rightBackMotor.setPower(power);
     }
 }

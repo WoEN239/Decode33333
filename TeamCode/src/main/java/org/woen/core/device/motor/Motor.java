@@ -1,29 +1,15 @@
 package org.woen.core.device.motor;
 
 
-import androidx.annotation.NonNull;
-
 import org.woen.core.device.Device;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 public class Motor extends Device {
-    public enum Direction {
-        FORWARD(1),
-        BACKWARD(-1);
-
-        public final int integer;
-
-        Direction(int integer) {
-            this.integer = integer;
-        }
-    }
-
-
     protected DcMotorEx device = null;
-    protected Direction direction = Direction.FORWARD;
 
 
     public Motor(String name) {
@@ -31,7 +17,7 @@ public class Motor extends Device {
     }
 
     @Override
-    public void initialize(@NonNull HardwareMap hardwareMap) {
+    public void initialize(HardwareMap hardwareMap) {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
@@ -40,7 +26,7 @@ public class Motor extends Device {
     }
 
     public double getPower() {
-        return device.getPower() * direction.integer;
+        return device.getPower();
     }
 
     /**
@@ -53,21 +39,18 @@ public class Motor extends Device {
      * @param power the new motor's power level in the range [-1; 1]
      */
     public void setPower(double power) {
-        device.setPower(power * direction.integer);
+        device.setPower(power);
     }
 
-    @NonNull
     public Direction getDirection() {
-        return direction;
+        return device.getDirection();
     }
 
-    public void setDirection(@NonNull Direction direction) {
-        this.direction = direction;
+    public void setDirection(Direction direction) {
+        device.setDirection(direction);
     }
 
-    public void reverseDirection() {
-        direction = (direction == Direction.FORWARD)
-                ? Direction.BACKWARD
-                : Direction.FORWARD;
+    public void invertDirection() {
+        setDirection(getDirection().inverted());
     }
 }

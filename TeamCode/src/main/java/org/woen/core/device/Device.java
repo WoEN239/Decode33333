@@ -1,8 +1,6 @@
 package org.woen.core.device;
 
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.utils.InitializableWith;
@@ -22,14 +20,7 @@ public abstract class Device implements InitializableWith<HardwareMap> {
         return initialized;
     }
 
-    @NonNull
     public String getName() {
         return name;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return getName();
     }
 }

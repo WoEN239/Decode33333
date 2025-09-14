@@ -1,8 +1,6 @@
 package org.woen.main.revolver;
 
 
-import androidx.annotation.NonNull;
-
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
@@ -13,7 +11,6 @@ import org.woen.core.utils.InitializableWith;
 public final class SortingRoll implements InitializableWith<HardwareMap> {
     private static final SortingRoll INSTANCE = new SortingRoll();
 
-
     private final Motor motor;
     private final SensorColor colorSensor;
 
@@ -23,13 +20,12 @@ public final class SortingRoll implements InitializableWith<HardwareMap> {
         colorSensor = new SensorColor("sorting_roll_color_sensor");
     }
 
-    @NonNull
     public static SortingRoll getInstance() {
         return INSTANCE;
     }
 
     @Override
-    public void initialize(@NonNull HardwareMap hardwareMap) {
+    public void initialize(HardwareMap hardwareMap) {
         motor.initialize(hardwareMap);
         colorSensor.initialize(hardwareMap);
     }
