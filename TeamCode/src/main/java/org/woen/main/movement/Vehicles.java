@@ -62,8 +62,4 @@ public final class Vehicles implements Initializable {
         rightFrontMotor.setPower(power);
         rightBackMotor.setPower(power);
     }
-
-    public void stopAll() {
-        moveLinearly(0);
-    }
 }
