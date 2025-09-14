@@ -10,7 +10,7 @@ import org.woen.core.device.sensors.SensorColor;
 import org.woen.core.utils.Initializable;
 
 
-public final class SortingRoll extends Initializable {
+public final class SortingRoll implements Initializable {
     private static final SortingRoll INSTANCE = new SortingRoll();
 
 
@@ -30,11 +30,12 @@ public final class SortingRoll extends Initializable {
 
     @Override
     public void initialize(@NonNull HardwareMap hardwareMap) {
-        if (isInitialized()) return;
-
         motor.initialize(hardwareMap);
         colorSensor.initialize(hardwareMap);
+    }
 
-        initialized = true;
+    @Override
+    public boolean isInitialized() {
+        return motor.isInitialized() && colorSensor.isInitialized();
     }
 }

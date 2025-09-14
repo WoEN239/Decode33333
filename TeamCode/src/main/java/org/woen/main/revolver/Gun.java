@@ -9,11 +9,11 @@ import org.woen.core.device.motor.Motor;
 import org.woen.core.utils.Initializable;
 
 
-public final class Gun extends Initializable {
+public final class Gun implements Initializable {
     private static final Gun INSTANCE = new Gun();
 
 
-    Motor motor;
+    private final Motor motor;
 
 
     private Gun() {
@@ -27,10 +27,11 @@ public final class Gun extends Initializable {
 
     @Override
     public void initialize(@NonNull HardwareMap hardwareMap) {
-        if (isInitialized()) return;
-
         motor.initialize(hardwareMap);
+    }
 
-        initialized = true;
+    @Override
+    public boolean isInitialized() {
+        return motor.isInitialized();
     }
 }

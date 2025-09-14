@@ -22,8 +22,8 @@ public class Motor extends Device {
     }
 
 
-    private DcMotorEx device = null;
-    private Direction direction = Direction.FORWARD;
+    protected DcMotorEx device = null;
+    protected Direction direction = Direction.FORWARD;
 
 
     public Motor(String name) {

@@ -9,7 +9,7 @@ import org.woen.core.device.motor.Motor;
 import org.woen.core.utils.Initializable;
 
 
-public final class Vehicles extends Initializable {
+public final class Vehicles implements Initializable {
     private static final Vehicles INSTANCE = new Vehicles();
 
 
@@ -36,8 +36,6 @@ public final class Vehicles extends Initializable {
 
     @Override
     public void initialize(@NonNull HardwareMap hardwareMap) {
-        if (isInitialized()) return;
-
         leftFrontMotor.initialize(hardwareMap);
         leftBackMotor.initialize(hardwareMap);
         rightFrontMotor.initialize(hardwareMap);
@@ -51,8 +49,14 @@ public final class Vehicles extends Initializable {
          */
         rightFrontMotor.reverseDirection();
         rightBackMotor.reverseDirection();
+    }
 
-        initialized = true;
+    @Override
+    public boolean isInitialized() {
+        return leftFrontMotor.isInitialized()
+                && rightFrontMotor.isInitialized()
+                && leftBackMotor.isInitialized()
+                && rightBackMotor.isInitialized();
     }
 
     public void moveLinearly(double power) {
