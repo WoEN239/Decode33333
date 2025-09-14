@@ -15,10 +15,10 @@ public final class VehicleMotors {
     private static final VehicleMotors INSTANCE = new VehicleMotors();
 
 
-    private Motor leftFrontMotor;
-    private Motor leftBackMotor;
-    private Motor rightFrontMotor;
-    private Motor rightBackMotor;
+    private final Motor leftFrontMotor;
+    private final Motor leftBackMotor;
+    private final Motor rightFrontMotor;
+    private final Motor rightBackMotor;
 
 
     private VehicleMotors() {

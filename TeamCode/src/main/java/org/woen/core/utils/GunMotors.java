@@ -15,8 +15,8 @@ public final class GunMotors {
     private static final GunMotors INSTANCE = new GunMotors();
 
 
-    private Motor leftMotor;
-    private Motor rightMotor;
+    private final Motor leftMotor;
+    private final Motor rightMotor;
 
 
     private GunMotors() {
