@@ -1,6 +1,8 @@
 package org.woen.core.utils;
 
 
+import androidx.annotation.NonNull;
+
 import org.woen.core.device.motor.Motor;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -28,11 +30,12 @@ public final class VehicleMotors {
         rightBackMotor = new Motor("right_back_motor");
     }
 
+    @NonNull
     public static VehicleMotors getInstance() {
         return INSTANCE;
     }
 
-    public void initialize(HardwareMap hardwareMap) {
+    public void initialize(@NonNull HardwareMap hardwareMap) {
         leftFrontMotor.initialize(hardwareMap);
         leftBackMotor.initialize(hardwareMap);
         rightFrontMotor.initialize(hardwareMap);

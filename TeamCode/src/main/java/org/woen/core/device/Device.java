@@ -15,7 +15,7 @@ public abstract class Device {
         this.name = name;
     }
 
-    public abstract void initialize(HardwareMap hardwareMap);
+    public abstract void initialize(@NonNull HardwareMap hardwareMap);
 
     public boolean isInitialized() {
         return initialized;

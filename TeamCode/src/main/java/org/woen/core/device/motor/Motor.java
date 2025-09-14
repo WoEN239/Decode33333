@@ -1,6 +1,8 @@
 package org.woen.core.device.motor;
 
 
+import androidx.annotation.NonNull;
+
 import org.woen.core.device.Device;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -29,7 +31,7 @@ public class Motor extends Device {
     }
 
     @Override
-    public void initialize(HardwareMap hardwareMap) {
+    public void initialize(@NonNull HardwareMap hardwareMap) {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
@@ -45,11 +47,12 @@ public class Motor extends Device {
         device.setPower(power * direction.integer);
     }
 
+    @NonNull
     public Direction getDirection() {
         return direction;
     }
 
-    public void setDirection(Direction direction) {
+    public void setDirection(@NonNull Direction direction) {
         this.direction = direction;
     }
 
