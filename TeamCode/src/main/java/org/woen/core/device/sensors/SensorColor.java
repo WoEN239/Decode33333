@@ -36,4 +36,14 @@ public class SensorColor extends Device{
         float hue = hsv[0];
         return hue;
     }
+
+    public float[] getHSV() {
+        float[] hsv = new float[3];
+        int red = getRed();
+        int green = getGreen();
+        int blue = getBlue();
+        Color.RGBToHSV(red, green, blue, hsv);
+        return hsv;
+    }
+
 }
