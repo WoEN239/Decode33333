@@ -29,6 +29,11 @@ public final class Vehicles extends Initializable {
         rightBackMotor.reverseDirection();
     }
 
+    @NonNull
+    public static Vehicles getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void initialize(@NonNull HardwareMap hardwareMap) {
         if (isInitialized()) return;

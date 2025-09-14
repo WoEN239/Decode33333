@@ -20,6 +20,11 @@ public final class Gun extends Initializable {
         motor = new Motor("gun_motor");
     }
 
+    @NonNull
+    public static Gun getInstance() {
+        return INSTANCE;
+    }
+
     @Override
     public void initialize(@NonNull HardwareMap hardwareMap) {
         if (isInitialized()) return;

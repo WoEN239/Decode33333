@@ -24,7 +24,7 @@ public final class SortingRoll extends Initializable {
     }
 
     @NonNull
-    public SortingRoll getInstance() {
+    public static SortingRoll getInstance() {
         return INSTANCE;
     }
 
