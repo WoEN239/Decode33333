@@ -3,22 +3,15 @@ package org.woen.core.device;
 
 import androidx.annotation.NonNull;
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.woen.core.utils.Initializable;
 
 
-public abstract class Device {
-    protected boolean initialized;
+public abstract class Device extends Initializable {
     protected final String name;
 
 
     protected Device(String name) {
         this.name = name;
-    }
-
-    public abstract void initialize(@NonNull HardwareMap hardwareMap);
-
-    public boolean isInitialized() {
-        return initialized;
     }
 
     @NonNull

@@ -57,8 +57,8 @@ public class Motor extends Device {
     }
 
     public void reverseDirection() {
-        setDirection(direction == Direction.FORWARD
+        direction = (direction == Direction.FORWARD)
                 ? Direction.BACKWARD
-                : Direction.FORWARD);
+                : Direction.FORWARD;
     }
 }
