@@ -43,6 +43,15 @@ public class Motor extends Device {
         return device.getPower() * direction.integer;
     }
 
+    /**
+     * Do not use this method for
+     * velocity (speed) control,
+     * because it may break the motor.
+     * And do not set power to 0,
+     * because it also breaks the motor.
+     *
+     * @param power the new motor's power level in the range [-1; 1]
+     */
     public void setPower(double power) {
         device.setPower(power * direction.integer);
     }

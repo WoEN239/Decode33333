@@ -3,10 +3,12 @@ package org.woen.core.device;
 
 import androidx.annotation.NonNull;
 
-import org.woen.core.utils.Initializable;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.woen.core.utils.InitializableWith;
 
 
-public abstract class Device implements Initializable {
+public abstract class Device implements InitializableWith<HardwareMap> {
     protected boolean initialized = false;
     protected final String name;
 

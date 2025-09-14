@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
 import org.woen.core.device.sensors.SensorColor;
-import org.woen.core.utils.Initializable;
+import org.woen.core.utils.InitializableWith;
 
 
-public final class SortingRoll implements Initializable {
+public final class SortingRoll implements InitializableWith<HardwareMap> {
     private static final SortingRoll INSTANCE = new SortingRoll();
 
 

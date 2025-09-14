@@ -6,10 +6,10 @@ import androidx.annotation.NonNull;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
-import org.woen.core.utils.Initializable;
+import org.woen.core.utils.InitializableWith;
 
 
-public final class Gun implements Initializable {
+public final class Gun implements InitializableWith<HardwareMap> {
     private static final Gun INSTANCE = new Gun();
 
 
