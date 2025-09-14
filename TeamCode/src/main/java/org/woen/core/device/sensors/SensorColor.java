@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 public class SensorColor extends Device{
     private ColorSensor device = null;
 
+
     public SensorColor(String name) {
         super(name);
     }
@@ -21,6 +22,7 @@ public class SensorColor extends Device{
         device = hardwareMap.get(ColorSensor.class, name);
         initialized = true;
     }
+
     public int getRed() {return device.red();}
 
     public int getGreen() {return device.green();}
