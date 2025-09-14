@@ -24,9 +24,6 @@ public final class Vehicles implements Initializable {
         rightFrontMotor = new Motor("right_front_vehicle_motor");
         leftBackMotor = new Motor("left_back_vehicle_motor");
         rightBackMotor = new Motor("right_back_vehicle_motor");
-
-        rightFrontMotor.reverseDirection();
-        rightBackMotor.reverseDirection();
     }
 
     @NonNull
