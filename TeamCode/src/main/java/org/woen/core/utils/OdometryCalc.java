@@ -9,7 +9,7 @@ Odometers (from the bottom)
 |             |
 |  |       |  |
 |  ^       ^  |
-|  A       B  |
+|  A   *   B  |
 |             |
 |      _ <- C |
 |             |
@@ -31,6 +31,7 @@ public class OdometryCalc {
     private double fullRotationC;
 
     private double x, y, rot;
+    private double prevA, prevB, prevC;
 
     public double getX() {
         return x;
