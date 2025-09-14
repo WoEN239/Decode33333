@@ -1,4 +1,4 @@
-package org.woen.core.device.motor;
+package org.woen.core.device;
 
 
 import androidx.annotation.NonNull;

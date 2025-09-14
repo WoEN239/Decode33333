@@ -1,5 +1,6 @@
 package org.woen.core.device.motor;
 
+
 import org.woen.core.device.Device;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -53,6 +54,8 @@ public class Motor extends Device {
     }
 
     public void reverseDirection() {
-        setDirection(new Direction(-getDirection().integer));
+        setDirection(direction == Direction.FORWARD
+                ? Direction.BACKWARD
+                : Direction.FORWARD);
     }
 }

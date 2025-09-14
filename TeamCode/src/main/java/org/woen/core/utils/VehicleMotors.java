@@ -1,10 +1,8 @@
-
-package org.woen.core;
+package org.woen.core.utils;
 
 
 import org.woen.core.device.motor.Motor;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 

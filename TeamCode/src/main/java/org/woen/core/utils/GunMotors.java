@@ -1,10 +1,8 @@
-
-package org.woen.core;
+package org.woen.core.utils;
 
 
 import org.woen.core.device.motor.Motor;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
@@ -22,13 +20,11 @@ public final class GunMotors {
 
 
     private GunMotors() {
-        leftFrontMotor = new Motor("left_front_motor");
-        leftBackMotor = new Motor("left_back_motor");
-        rightFrontMotor = new Motor("right_front_motor");
-        rightBackMotor = new Motor("right_back_motor");
+        leftMotor = new Motor("left_gun_motor");
+        rightMotor = new Motor("right_gun_motor");
     }
 
-    public static VehicleMotors getInstance() {
+    public static GunMotors getInstance() {
         return INSTANCE;
     }
 
@@ -36,7 +32,7 @@ public final class GunMotors {
         leftMotor.initialize(hardwareMap);
         rightMotor.initialize(hardwareMap);
 
-        /* 
+        /*
          * See VehicleMotors.java for explanation.
          *
          * It is assumed that motor body
@@ -62,7 +58,7 @@ public final class GunMotors {
     }
 
     public double getPower() {
-        return leftFrontMotor.getPower();
+        return leftMotor.getPower();
     }
 }
 
