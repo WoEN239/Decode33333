@@ -40,8 +40,8 @@ public final class Vehicles implements InitializableWith<HardwareMap> {
          * motors will rotate backward.
          * We should change their direction.
          */
-        rightFrontMotor.invertDirection();
         rightBackMotor.invertDirection();
+        leftBackMotor.invertDirection();
     }
 
     @Override
