@@ -79,3 +79,9 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+
+# Other IDE
+**/.project
+**/.classpath
+**/.settings/
+
