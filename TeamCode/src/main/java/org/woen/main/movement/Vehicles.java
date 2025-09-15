@@ -4,10 +4,10 @@ package org.woen.main.movement;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
-import org.woen.core.utils.InitializableWith;
+import org.woen.core.device.trait.Initializable;
 
 
-public final class Vehicles implements InitializableWith<HardwareMap> {
+public final class Vehicles implements Initializable {
     private static final Vehicles INSTANCE = new Vehicles();
 
     private final Motor leftFrontMotor;

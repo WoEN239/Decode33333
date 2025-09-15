@@ -1,4 +1,4 @@
-package org.woen.core.device.sensors;
+package org.woen.core.device.sensor;
 
 import org.woen.core.device.Device;
 import com.qualcomm.robotcore.hardware.HardwareMap;

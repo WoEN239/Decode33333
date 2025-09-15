@@ -1,8 +1,4 @@
-package org.woen.core.utils;
-
-import androidx.annotation.NonNull;
-
-import com.acmerobotics.roadrunner.Vector2d;
+package org.woen.core.util;
 
 /*
 Odometers (from the bottom)

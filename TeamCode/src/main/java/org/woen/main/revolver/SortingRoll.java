@@ -4,11 +4,11 @@ package org.woen.main.revolver;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
-import org.woen.core.device.sensors.SensorColor;
-import org.woen.core.utils.InitializableWith;
+import org.woen.core.device.sensor.SensorColor;
+import org.woen.core.device.trait.Initializable;
 
 
-public final class SortingRoll implements InitializableWith<HardwareMap> {
+public final class SortingRoll implements Initializable {
     private static final SortingRoll INSTANCE = new SortingRoll();
 
     private final Motor motor;

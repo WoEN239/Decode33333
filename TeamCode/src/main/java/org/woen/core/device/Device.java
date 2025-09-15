@@ -1,12 +1,10 @@
 package org.woen.core.device;
 
 
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
-import org.woen.core.utils.InitializableWith;
+import org.woen.core.device.trait.Initializable;
 
 
-public abstract class Device implements InitializableWith<HardwareMap> {
+public abstract class Device implements Initializable {
     protected boolean initialized = false;
     protected final String name;
 
