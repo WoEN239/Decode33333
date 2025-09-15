@@ -3,6 +3,7 @@ package org.woen.core.device.motor;
 
 import org.woen.core.device.Device;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -21,6 +22,8 @@ public class Motor extends Device {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
+
+        device.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         initialized = true;
     }

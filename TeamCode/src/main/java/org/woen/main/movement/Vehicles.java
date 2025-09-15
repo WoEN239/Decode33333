@@ -51,4 +51,16 @@ public final class Vehicles implements InitializableWith<HardwareMap> {
                 && leftBackMotor.isInitialized()
                 && rightBackMotor.isInitialized();
     }
+
+    public void moveToDirection(double forward, double horizontal, double turn) {
+        double frontLeftPower = forward + horizontal + turn;
+        double frontRightPower = forward - horizontal - turn;
+        double backLeftPower = forward - horizontal + turn;
+        double backRightPower = forward + horizontal - turn;
+
+        leftFrontMotor.setPower(frontLeftPower);
+        leftBackMotor.setPower(backLeftPower);
+        rightFrontMotor.setPower(frontRightPower);
+        rightBackMotor.setPower(backRightPower);
+    }
 }
