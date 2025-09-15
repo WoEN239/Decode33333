@@ -1,11 +1,16 @@
 package org.woen.main.opmodes;
 
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.woen.main.movement.Vehicles;
 
 
@@ -14,15 +19,22 @@ public class BasicMovement extends OpMode
 {
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
+    IntegratingGyroscope gyro;
+    IMU imu;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
-        telemetry.addData("Status", "Initialized");
         Vehicles.getInstance().initialize(hardwareMap);
 
+        imu = hardwareMap.get(IMU.class, "imu");
+        RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
+        RevHubOrientationOnRobot.UsbFacingDirection  usbDirection  = RevHubOrientationOnRobot.UsbFacingDirection.RIGHT;
+        RevHubOrientationOnRobot orientationOnRobot = new RevHubOrientationOnRobot(logoDirection, usbDirection);
+        imu.initialize(new IMU.Parameters(orientationOnRobot));
+        telemetry.addData("Status", "Initialized");
     }
 
     /*
@@ -45,10 +57,14 @@ public class BasicMovement extends OpMode
      */
     @Override
     public void loop() {
+        YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
         telemetry.addData("Status", "Run Time: " + runtime.toString());
         telemetry.addData("GPX", gamepad1.left_stick_x);
         telemetry.addData("GPY", -gamepad1.left_stick_y);
         telemetry.addData("GPR", gamepad1.right_trigger - gamepad1.left_trigger);
+        telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES));
+        telemetry.addData("Pitch (X)", "%.2f Deg.", orientation.getPitch(AngleUnit.DEGREES));
+        telemetry.addData("Roll (Y)", "%.2f Deg.\n", orientation.getRoll(AngleUnit.DEGREES));
 
         Vehicles.getInstance().moveToDirection(gamepad1.left_stick_x,
                 -gamepad1.left_stick_y,
