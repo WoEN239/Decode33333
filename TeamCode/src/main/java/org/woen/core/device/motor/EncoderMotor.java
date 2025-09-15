@@ -15,6 +15,7 @@ public class EncoderMotor extends Motor implements VelocityControl {
     @Override
     public void initialize(HardwareMap hardwareMap) {
         super.initialize(hardwareMap);
+
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 

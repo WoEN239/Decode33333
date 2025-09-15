@@ -20,7 +20,11 @@ public class SensorColor extends Device{
         if(isInitialized()) return;
 
         device = hardwareMap.get(ColorSensor.class, name);
-        initialized = true;
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return device != null;
     }
 
     public int getRed() {return device.red();}

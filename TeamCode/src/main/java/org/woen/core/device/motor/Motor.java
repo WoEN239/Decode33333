@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
 public class Motor extends Device {
-    protected DcMotorEx device;
+    protected DcMotorEx device = null;
 
 
     public Motor(String name) {
@@ -22,10 +22,14 @@ public class Motor extends Device {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
+
         device.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
 
-        initialized = true;
+    @Override
+    public boolean isInitialized() {
+        return device != null;
     }
 
     public double getPower() {

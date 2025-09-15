@@ -53,6 +53,8 @@ public final class Vehicles implements Initializable {
     }
 
     public void moveToDirection(double forward, double horizontal, double turn) {
+        //! TODO: code normal implementation
+
         double frontLeftPower = forward + horizontal + turn;
         double frontRightPower = forward - horizontal - turn;
         double backLeftPower = forward - horizontal + turn;

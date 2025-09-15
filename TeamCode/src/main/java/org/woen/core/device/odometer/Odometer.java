@@ -10,7 +10,7 @@ import org.woen.core.device.trait.Encoder;
 
 
 public class Odometer extends Device implements Encoder {
-    protected DcMotorEx device;
+    protected DcMotorEx device = null;
 
 
     public Odometer(String name) {
@@ -22,9 +22,13 @@ public class Odometer extends Device implements Encoder {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
-        device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        initialized = true;
+        device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return device != null;
     }
 
     @Override
