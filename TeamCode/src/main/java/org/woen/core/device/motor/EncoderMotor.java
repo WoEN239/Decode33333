@@ -4,10 +4,12 @@ package org.woen.core.device.motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.woen.core.device.trait.Encoder;
 import org.woen.core.device.trait.VelocityControl;
+import org.woen.core.util.NotImplementedException;
 
 
-public class EncoderMotor extends Motor implements VelocityControl {
+public class EncoderMotor extends Motor implements VelocityControl, Encoder {
     public EncoderMotor(String name) {
         super(name);
     }
@@ -31,13 +33,35 @@ public class EncoderMotor extends Motor implements VelocityControl {
     }
 
     @Override
-    public double getVelocity() {
-        return getPower();
+    public void setVelocityControlMode(ControlMode mode) throws NotImplementedException {
+        if (!isVelocityControlModeSupported(mode)) {
+            throw new NotImplementedException();
+        }
+        velocityControlMode = mode;
     }
 
     @Override
-    public void setVelocity(double velocity) throws UnsupportedOperationException {
+    public void setVelocity(double velocity) throws NotImplementedException {
+        if (super.isVelocityControlModeSupported(velocityControlMode)) {
+            super.setVelocity(velocity);
+            return;
+        }
+
         //! TODO: implement velocity control
-        throw new UnsupportedOperationException("Not implemented yet");
+        throw new NotImplementedException();
+    }
+
+    @Override
+    public boolean isVelocityControlModeSupported(ControlMode mode) {
+        switch (mode) {
+            case RAW:
+            case TIMER:
+            case AMPERAGE:
+            case OWN_ENCODER:
+            case THIRD_PARTY_ENCODER:
+                return true;
+        }
+
+        return false;
     }
 }
