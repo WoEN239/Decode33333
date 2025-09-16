@@ -1,6 +1,7 @@
 package org.woen.core.device.motor;
 
 
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -76,5 +77,14 @@ public class Motor extends Device {
 
     public boolean isBusy() {
         return device.isBusy();
+    }
+
+    /**
+     * Get the current (amperage) consumed by this motor.
+     * @param unit current units
+     * @return the current consumed by this motor.
+     */
+    public double getCurrent(CurrentUnit unit) {
+        return device.getCurrent(unit);
     }
 }
