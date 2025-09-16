@@ -43,14 +43,17 @@ public class Odometer extends Device implements Encoder {
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
+    @Override
     public void setDirection(Direction direction) {
         device.setDirection(direction);
     }
 
+    @Override
     public Direction getDirection() {
         return device.getDirection();
     }
 
+    @Override
     public void invertDirection() {
         setDirection(getDirection().inverted());
     }

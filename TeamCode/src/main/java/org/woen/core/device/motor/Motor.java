@@ -3,6 +3,7 @@ package org.woen.core.device.motor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
+import org.woen.core.device.trait.Directional;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -10,7 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-public class Motor extends Device {
+public class Motor extends Device implements Directional {
     protected DcMotorEx device = null;
 
 
@@ -51,14 +52,17 @@ public class Motor extends Device {
         device.setPower(power);
     }
 
+    @Override
     public Direction getDirection() {
         return device.getDirection();
     }
 
+    @Override
     public void setDirection(Direction direction) {
         device.setDirection(direction);
     }
 
+    @Override
     public void invertDirection() {
         setDirection(getDirection().inverted());
     }
