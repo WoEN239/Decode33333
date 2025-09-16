@@ -3,6 +3,7 @@ package org.woen.core.device.odometer;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.Device;
@@ -40,5 +41,17 @@ public class Odometer extends Device implements Encoder {
     public void resetEncoder() {
         device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void setDirection(Direction direction) {
+        device.setDirection(direction);
+    }
+
+    public Direction getDirection() {
+        return device.getDirection();
+    }
+
+    public void invertDirection() {
+        setDirection(getDirection().inverted());
     }
 }
