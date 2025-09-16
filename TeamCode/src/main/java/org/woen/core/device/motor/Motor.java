@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Motor extends Device implements VelocityControl, Directional {
     protected DcMotorEx device = null;
     protected ControlMode velocityControlMode;
-    protected Encoder thirdPartyEncoder = null;
+    protected Encoder linkedEncoder = null;
 
 
     public Motor(String name) {
@@ -31,13 +31,23 @@ public class Motor extends Device implements VelocityControl, Directional {
 
         device = hardwareMap.get(DcMotorEx.class, name);
 
-        // device.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public boolean isInitialized() {
         return device != null;
+    }
+
+    @Override
+    public void linkEncoder(Encoder encoder) {
+        linkedEncoder = encoder;
+    }
+
+    @Override
+    public Encoder getLinkedEncoder() {
+        return linkedEncoder;
     }
 
     public double getPower() {
@@ -56,6 +66,10 @@ public class Motor extends Device implements VelocityControl, Directional {
      */
     public void setPower(double power) {
         device.setPower(power);
+    }
+
+    public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
+        device.setZeroPowerBehavior(behavior);
     }
 
     @Override
@@ -100,15 +114,11 @@ public class Motor extends Device implements VelocityControl, Directional {
 
     @Override
     public void setVelocityControlMode(ControlMode mode) throws NotImplementedException {
-        switch (mode) {
-            case RAW:
-            case TIMER:
-            case AMPERAGE:
-                velocityControlMode = mode;
-
-            default:
-                throw new NotImplementedException();
+        if (!isVelocityControlModeSupported(mode)) {
+            throw new NotImplementedException();
         }
+
+        velocityControlMode = mode;
     }
 
     @Override
@@ -125,7 +135,9 @@ public class Motor extends Device implements VelocityControl, Directional {
     public void setVelocity(double newVelocity) throws NotImplementedException {
         final double previousVelocity = getVelocity();
 
-        if (velocityControlMode == ControlMode.RAW || newVelocity == previousVelocity) {
+        if (newVelocity == previousVelocity) return;
+
+        if (velocityControlMode == ControlMode.RAW) {
             setPower(newVelocity);
             return;
         }
@@ -144,10 +156,5 @@ public class Motor extends Device implements VelocityControl, Directional {
         }
 
         return false;
-    }
-
-    @Override
-    public void setThirdPartyEncoder(Encoder encoder) {
-        thirdPartyEncoder = encoder;
     }
 }

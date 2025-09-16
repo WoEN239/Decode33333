@@ -33,8 +33,10 @@ public interface VelocityControl {
     boolean isVelocityControlModeSupported(ControlMode mode);
 
     // TODO: void setVelocityCoefficients(...);
-    void setThirdPartyEncoder(Encoder encoder);
 
     double getVelocity();
     void setVelocity(double velocity);
+    
+    void linkEncoder(Encoder encoder);
+    Encoder getLinkedEncoder();
 }

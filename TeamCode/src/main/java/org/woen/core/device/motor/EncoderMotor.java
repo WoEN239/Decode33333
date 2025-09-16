@@ -12,13 +12,14 @@ import org.woen.core.util.NotImplementedException;
 public class EncoderMotor extends Motor implements VelocityControl, Encoder {
     public EncoderMotor(String name) {
         super(name);
+        velocityControlMode = ControlMode.OWN_ENCODER;
     }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
         super.initialize(hardwareMap);
-
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        super.linkEncoder(this);
     }
 
     @Override
@@ -37,17 +38,28 @@ public class EncoderMotor extends Motor implements VelocityControl, Encoder {
         if (!isVelocityControlModeSupported(mode)) {
             throw new NotImplementedException();
         }
+
         velocityControlMode = mode;
     }
 
     @Override
     public void setVelocity(double velocity) throws NotImplementedException {
+        if (velocityControlMode == ControlMode.OWN_ENCODER) {
+            Encoder savedEncoder = getLinkedEncoder();
+
+            linkEncoder(this);
+            super.setVelocityControlMode(ControlMode.THIRD_PARTY_ENCODER);
+            super.setVelocity(velocity);
+            linkEncoder(savedEncoder);
+
+            return;
+        }
+
         if (super.isVelocityControlModeSupported(velocityControlMode)) {
             super.setVelocity(velocity);
             return;
         }
 
-        //! TODO: implement velocity control
         throw new NotImplementedException();
     }
 
