@@ -26,19 +26,25 @@ Odometers (from the top)
 public class OdometryCalc {
 
     // odometer value * ticksToCm = odometer distance
-    private double ticksToCm;
+    private final double ticksToCm;
 
     // Odometer A - Odometer B ~ Rotation
     // fullRotationAB: Change in the difference between the distances
     // of odometers A and B per a 360 rotation
     // Measured not in cm
-    private double ticksPerRotAB;
+    private final double ticksPerRotAB;
 
     // Change in odometer C per a 360 rotation
-    private double ticksPerRotC;
+    private final double ticksPerRotC;
 
     private double x, y, rot;
     private double prevA, prevB, prevC;
+
+    public OdometryCalc(double ticksToCm, double ticksPerRotAB, double ticksPerRotC) {
+        this.ticksToCm = ticksToCm;
+        this.ticksPerRotAB = ticksPerRotAB;
+        this.ticksPerRotC = ticksPerRotC;
+    }
 
     public double getX() {
         return x;
