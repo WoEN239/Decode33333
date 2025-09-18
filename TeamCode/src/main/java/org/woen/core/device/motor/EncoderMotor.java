@@ -5,11 +5,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.trait.Encoder;
-import org.woen.core.device.trait.VelocityControl;
-import org.woen.core.util.NotImplementedException;
+import org.woen.core.device.trait.VelocityController;
+import org.woen.core.util.UnimplementedException;
 
 
-public class EncoderMotor extends Motor implements VelocityControl, Encoder {
+public class EncoderMotor extends Motor implements VelocityController, Encoder {
     public EncoderMotor(String name) {
         super(name);
         velocityControlMode = ControlMode.OWN_ENCODER;
@@ -34,46 +34,40 @@ public class EncoderMotor extends Motor implements VelocityControl, Encoder {
     }
 
     @Override
-    public void setVelocityControlMode(ControlMode mode) throws NotImplementedException {
+    public void setVelocityControlMode(ControlMode mode) throws UnsupportedOperationException {
         if (!isVelocityControlModeSupported(mode)) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         velocityControlMode = mode;
     }
 
     @Override
-    public void setVelocity(double velocity) throws NotImplementedException {
+    public void setVelocity(double newVelocity) throws InterruptedException {
+        final double previousVelocity = getVelocity();
+
+        if (newVelocity == previousVelocity) return;
+
         if (velocityControlMode == ControlMode.OWN_ENCODER) {
             Encoder savedEncoder = getLinkedEncoder();
 
             linkEncoder(this);
             super.setVelocityControlMode(ControlMode.THIRD_PARTY_ENCODER);
-            super.setVelocity(velocity);
+            super.setVelocity(newVelocity);
+
             linkEncoder(savedEncoder);
+            super.setVelocityControlMode(ControlMode.OWN_ENCODER);
 
             return;
         }
 
         if (super.isVelocityControlModeSupported(velocityControlMode)) {
-            super.setVelocity(velocity);
-            return;
+            super.setVelocity(newVelocity);
         }
-
-        throw new NotImplementedException();
     }
 
     @Override
     public boolean isVelocityControlModeSupported(ControlMode mode) {
-        switch (mode) {
-            case RAW:
-            case TIMER:
-            case AMPERAGE:
-            case OWN_ENCODER:
-            case THIRD_PARTY_ENCODER:
-                return true;
-        }
-
-        return false;
+        return super.isVelocityControlModeSupported(mode) || mode == ControlMode.OWN_ENCODER;
     }
 }

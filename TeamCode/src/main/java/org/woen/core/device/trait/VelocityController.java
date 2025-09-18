@@ -1,10 +1,7 @@
 package org.woen.core.device.trait;
 
 
-import org.woen.core.util.NotImplementedException;
-
-
-public interface VelocityControl {
+public interface VelocityController {
     enum ControlMode {
         /**
          * Control using only sleep()-like functions.
@@ -28,15 +25,20 @@ public interface VelocityControl {
         RAW,
     }
 
-    void setVelocityControlMode(ControlMode mode) throws NotImplementedException;
+
     ControlMode getVelocityControlMode();
+    void setVelocityControlMode(ControlMode mode) throws UnsupportedOperationException;
     boolean isVelocityControlModeSupported(ControlMode mode);
 
-    // TODO: void setVelocityCoefficients(...);
+    void setPIDCoefficients(double kP, double kI, double kD);
 
     double getVelocity();
-    void setVelocity(double velocity);
-    
-    void linkEncoder(Encoder encoder);
+
+    /**
+     * @throws InterruptedException only in TIMER control mode
+     */
+    void setVelocity(double velocity) throws InterruptedException;
+
     Encoder getLinkedEncoder();
+    void linkEncoder(Encoder encoder);
 }

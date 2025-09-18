@@ -11,11 +11,12 @@ import org.woen.core.device.trait.Encoder;
 
 
 public class Odometer extends Device implements Encoder {
-    protected DcMotorEx device = null;
+    protected DcMotorEx device;
 
 
     public Odometer(String name) {
         super(name);
+        device = null;
     }
 
     @Override

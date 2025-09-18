@@ -5,8 +5,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 import org.woen.core.device.trait.Directional;
 import org.woen.core.device.trait.Encoder;
-import org.woen.core.device.trait.VelocityControl;
-import org.woen.core.util.NotImplementedException;
+import org.woen.core.device.trait.TickSleeper;
+import org.woen.core.device.trait.VelocityController;
+import org.woen.core.util.PIDController;
+import org.woen.core.util.UnimplementedException;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -14,15 +16,19 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-public class Motor extends Device implements VelocityControl, Directional {
-    protected DcMotorEx device = null;
+public class Motor extends Device implements VelocityController, Directional {
+    protected DcMotorEx device;
     protected ControlMode velocityControlMode;
-    protected Encoder linkedEncoder = null;
+    protected Encoder linkedEncoder;
+    protected PIDController pidController;
 
 
     public Motor(String name) {
         super(name);
+        device = null;
+        linkedEncoder = null;
         velocityControlMode = ControlMode.TIMER;
+        pidController = new PIDController(1, 1, 1);
     }
 
     @Override
@@ -113,17 +119,22 @@ public class Motor extends Device implements VelocityControl, Directional {
     }
 
     @Override
-    public void setVelocityControlMode(ControlMode mode) throws NotImplementedException {
+    public ControlMode getVelocityControlMode() {
+        return velocityControlMode;
+    }
+
+    @Override
+    public void setVelocityControlMode(ControlMode mode) throws UnsupportedOperationException {
         if (!isVelocityControlModeSupported(mode)) {
-            throw new NotImplementedException();
+            throw new UnsupportedOperationException();
         }
 
         velocityControlMode = mode;
     }
 
     @Override
-    public ControlMode getVelocityControlMode() {
-        return velocityControlMode;
+    public void setPIDCoefficients(double kP, double kI, double kD) {
+        pidController.setCoefficients(kP, kI, kD);
     }
 
     @Override
@@ -132,7 +143,7 @@ public class Motor extends Device implements VelocityControl, Directional {
     }
 
     @Override
-    public void setVelocity(double newVelocity) throws NotImplementedException {
+    public void setVelocity(double newVelocity) throws UnimplementedException, InterruptedException {
         final double previousVelocity = getVelocity();
 
         if (newVelocity == previousVelocity) return;
@@ -142,7 +153,25 @@ public class Motor extends Device implements VelocityControl, Directional {
             return;
         }
 
-        throw new NotImplementedException();
+        TickSleeper sleeper;
+
+        if (velocityControlMode == ControlMode.TIMER) {
+            sleeper = () -> {
+                // 2/10 sec
+                Thread.sleep(100);
+            };
+        } else {
+            throw new UnimplementedException();
+        }
+
+        pidController.setTarget(newVelocity);
+
+        double currentVelocity = previousVelocity;
+        while (currentVelocity != newVelocity) {
+            currentVelocity = pidController.calculate(currentVelocity);
+            setPower(Motor.normalizePower(currentVelocity));
+            sleeper.sleep();
+        }
     }
 
     @Override
@@ -156,5 +185,12 @@ public class Motor extends Device implements VelocityControl, Directional {
         }
 
         return false;
+    }
+
+
+    public static double normalizePower(double power) {
+        if (power < -1) return -1;
+        if (power > 1) return 1;
+        return power;
     }
 }

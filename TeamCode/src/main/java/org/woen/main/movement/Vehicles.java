@@ -55,10 +55,10 @@ public final class Vehicles implements Initializable {
     public void moveToDirection(double forward, double horizontal, double turn) {
         //! TODO: code normal implementation
 
-        double frontLeftPower = forward + horizontal + turn;
-        double frontRightPower = forward - horizontal - turn;
-        double backLeftPower = forward - horizontal + turn;
-        double backRightPower = forward + horizontal - turn;
+        double frontLeftPower = Motor.normalizePower(forward + horizontal + turn);
+        double frontRightPower = Motor.normalizePower(forward - horizontal - turn);
+        double backLeftPower = Motor.normalizePower(forward - horizontal + turn);
+        double backRightPower = Motor.normalizePower(forward + horizontal - turn);
 
         leftFrontMotor.setPower(frontLeftPower);
         leftBackMotor.setPower(backLeftPower);
