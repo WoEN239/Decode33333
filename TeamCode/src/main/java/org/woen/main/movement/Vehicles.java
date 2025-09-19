@@ -60,9 +60,9 @@ public final class Vehicles implements Initializable {
         double backLeftPower = Motor.normalizePower(forward - horizontal + turn);
         double backRightPower = Motor.normalizePower(forward + horizontal - turn);
 
-        leftFrontMotor.setPower(frontLeftPower);
-        leftBackMotor.setPower(backLeftPower);
-        rightFrontMotor.setPower(frontRightPower);
-        rightBackMotor.setPower(backRightPower);
+        leftFrontMotor.setVelocity(frontLeftPower);
+        leftBackMotor.setVelocity(backLeftPower);
+        rightFrontMotor.setVelocity(frontRightPower);
+        rightBackMotor.setVelocity(backRightPower);
     }
 }
