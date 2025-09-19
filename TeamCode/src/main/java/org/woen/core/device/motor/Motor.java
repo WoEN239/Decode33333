@@ -19,7 +19,7 @@ public class Motor extends Device implements VelocityController, Directional {
     protected DcMotorEx device;
     protected ControlMode velocityControlMode;
     protected PIDController pidController;
-    protected double powerMistake;
+    protected double powerError;
 
 
     public Motor(String name) {
@@ -27,7 +27,7 @@ public class Motor extends Device implements VelocityController, Directional {
         device = null;
         velocityControlMode = ControlMode.PID;
         pidController = new PIDController(1, 1, 1);
-        powerMistake = 0.01;
+        powerError = 0.01;
     }
 
     @Override
@@ -45,12 +45,12 @@ public class Motor extends Device implements VelocityController, Directional {
         return device != null;
     }
 
-    public double getPowerMistake() {
-        return powerMistake;
+    public double getPowerError() {
+        return powerError;
     }
 
-    public void setPowerMistake(double powerMistake) {
-        this.powerMistake = powerMistake;
+    public void setPowerError(double error) {
+        powerError = Math.abs(error);
     }
 
     public double getPower() {
@@ -149,11 +149,9 @@ public class Motor extends Device implements VelocityController, Directional {
         } else {
             final double calculatedVelocity =
                     Motor.normalizePower(pidController.calculate(currentVelocity));
-            final double moduleOfDifferent =
-                    PIDController.getModuleOfDifferent(calculatedVelocity, targetVelocity);
 
             newVelocity =
-                    (moduleOfDifferent > powerMistake)
+                    (Math.abs(pidController.getLastError()) > powerError)
                     ? calculatedVelocity
                     : targetVelocity;
         }
