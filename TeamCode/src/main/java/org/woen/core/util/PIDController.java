@@ -6,7 +6,7 @@ public final class PIDController {
     private double kI;
     private double kD;
 
-    private double error;
+    private double lastError;
     private double integral;
 
     private double target;
@@ -14,7 +14,7 @@ public final class PIDController {
 
     public PIDController(double kP, double kI, double kD) {
         setCoefficients(kP, kI, kD);
-        previousError = 0;
+        lastError = 0;
         integral = 0;
     }
 
@@ -33,15 +33,15 @@ public final class PIDController {
     }
 
     public double getLastError() {
-        return error;
+        return lastError;
     }
 
     public double calculate(double current) {
-        error = target - current;
+        final double error = target - current;
 
         integral += error;
 
-        final double derivative = error - previousError;
+        final double derivative = error - lastError;
 
         return (kP * error) + (kI * integral) + (kD * derivative);
     }
