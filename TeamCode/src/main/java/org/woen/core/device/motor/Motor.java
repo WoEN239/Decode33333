@@ -5,7 +5,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 import org.woen.core.device.trait.Directional;
 import org.woen.core.device.trait.Encoder;
-import org.woen.core.device.trait.TickSleeper;
 import org.woen.core.device.trait.VelocityController;
 import org.woen.core.util.PIDController;
 import org.woen.core.util.UnimplementedException;
@@ -19,16 +18,16 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 public class Motor extends Device implements VelocityController, Directional {
     protected DcMotorEx device;
     protected ControlMode velocityControlMode;
-    protected Encoder linkedEncoder;
     protected PIDController pidController;
+    protected double powerMistake;
 
 
     public Motor(String name) {
         super(name);
         device = null;
-        linkedEncoder = null;
-        velocityControlMode = ControlMode.TIMER;
+        velocityControlMode = ControlMode.PID;
         pidController = new PIDController(1, 1, 1);
+        powerMistake = 0.01;
     }
 
     @Override
@@ -46,14 +45,12 @@ public class Motor extends Device implements VelocityController, Directional {
         return device != null;
     }
 
-    @Override
-    public void linkEncoder(Encoder encoder) {
-        linkedEncoder = encoder;
+    public double getPowerMistake() {
+        return powerMistake;
     }
 
-    @Override
-    public Encoder getLinkedEncoder() {
-        return linkedEncoder;
+    public void setPowerMistake(double powerMistake) {
+        this.powerMistake = powerMistake;
     }
 
     public double getPower() {
@@ -124,12 +121,44 @@ public class Motor extends Device implements VelocityController, Directional {
     }
 
     @Override
-    public void setVelocityControlMode(ControlMode mode) throws UnsupportedOperationException {
-        if (!isVelocityControlModeSupported(mode)) {
-            throw new UnsupportedOperationException();
+    public void setVelocityControlMode(ControlMode mode) {
+        velocityControlMode = mode;
+    }
+
+    @Override
+    public double getVelocityTarget() {
+        return pidController.getTarget();
+    }
+
+    @Override
+    public void setVelocityTarget(double target) {
+        pidController.setTarget(Motor.normalizePower(target));
+    }
+
+    @Override
+    public void velocityTick() {
+        final double currentVelocity = getVelocity();
+        final double targetVelocity = getVelocityTarget();
+
+        if (currentVelocity == targetVelocity) return;
+
+        final double newVelocity;
+
+        if (velocityControlMode == ControlMode.RAW) {
+            newVelocity = targetVelocity;
+        } else {
+            final double calculatedVelocity =
+                    Motor.normalizePower(pidController.calculate(currentVelocity));
+            final double moduleOfDifferent =
+                    PIDController.getModuleOfDifferent(calculatedVelocity, targetVelocity);
+
+            newVelocity =
+                    (moduleOfDifferent > powerMistake)
+                    ? calculatedVelocity
+                    : targetVelocity;
         }
 
-        velocityControlMode = mode;
+        setPower(newVelocity);
     }
 
     @Override
@@ -143,49 +172,11 @@ public class Motor extends Device implements VelocityController, Directional {
     }
 
     @Override
-    public void setVelocity(double newVelocity) throws UnimplementedException, InterruptedException {
-        final double previousVelocity = getVelocity();
-
-        if (newVelocity == previousVelocity) return;
-
-        if (velocityControlMode == ControlMode.RAW) {
-            setPower(newVelocity);
-            return;
-        }
-
-        TickSleeper sleeper;
-
-        if (velocityControlMode == ControlMode.TIMER) {
-            sleeper = () -> {
-                // 2/10 sec
-                Thread.sleep(100);
-            };
-        } else {
-            throw new UnimplementedException();
-        }
-
-        pidController.setTarget(newVelocity);
-
-        double currentVelocity = previousVelocity;
-        while (currentVelocity != newVelocity) {
-            currentVelocity = pidController.calculate(currentVelocity);
-            setPower(Motor.normalizePower(currentVelocity));
-            sleeper.sleep();
-        }
+    public void setVelocity(double newVelocity) {
+        setVelocityTarget(newVelocity);
+        velocityTick();
     }
 
-    @Override
-    public boolean isVelocityControlModeSupported(ControlMode mode) {
-        switch (mode) {
-            case RAW:
-            case TIMER:
-            case AMPERAGE:
-            case THIRD_PARTY_ENCODER:
-                return true;
-        }
-
-        return false;
-    }
 
 
     public static double normalizePower(double power) {

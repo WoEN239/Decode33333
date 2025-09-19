@@ -12,14 +12,12 @@ import org.woen.core.util.UnimplementedException;
 public class EncoderMotor extends Motor implements VelocityController, Encoder {
     public EncoderMotor(String name) {
         super(name);
-        velocityControlMode = ControlMode.OWN_ENCODER;
     }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
         super.initialize(hardwareMap);
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        super.linkEncoder(this);
     }
 
     @Override
@@ -31,43 +29,5 @@ public class EncoderMotor extends Motor implements VelocityController, Encoder {
     @Override
     public int getEncoderPosition() {
         return device.getCurrentPosition();
-    }
-
-    @Override
-    public void setVelocityControlMode(ControlMode mode) throws UnsupportedOperationException {
-        if (!isVelocityControlModeSupported(mode)) {
-            throw new UnsupportedOperationException();
-        }
-
-        velocityControlMode = mode;
-    }
-
-    @Override
-    public void setVelocity(double newVelocity) throws InterruptedException {
-        final double previousVelocity = getVelocity();
-
-        if (newVelocity == previousVelocity) return;
-
-        if (velocityControlMode == ControlMode.OWN_ENCODER) {
-            Encoder savedEncoder = getLinkedEncoder();
-
-            linkEncoder(this);
-            super.setVelocityControlMode(ControlMode.THIRD_PARTY_ENCODER);
-            super.setVelocity(newVelocity);
-
-            linkEncoder(savedEncoder);
-            super.setVelocityControlMode(ControlMode.OWN_ENCODER);
-
-            return;
-        }
-
-        if (super.isVelocityControlModeSupported(velocityControlMode)) {
-            super.setVelocity(newVelocity);
-        }
-    }
-
-    @Override
-    public boolean isVelocityControlModeSupported(ControlMode mode) {
-        return super.isVelocityControlModeSupported(mode) || mode == ControlMode.OWN_ENCODER;
     }
 }

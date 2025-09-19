@@ -42,4 +42,9 @@ public final class PIDController {
 
         return (kP * error) + (kI * integral) + (kD * derivative);
     }
+
+
+    public static double getModuleOfDifferent(double current, double target) {
+        return Math.abs(target - current);
+    }
 }
