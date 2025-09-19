@@ -6,7 +6,7 @@ public final class PIDController {
     private double kI;
     private double kD;
 
-    private double previousError;
+    private double error;
     private double integral;
 
     private double target;
@@ -32,19 +32,17 @@ public final class PIDController {
         this.target = target;
     }
 
+    public double getLastError() {
+        return error;
+    }
+
     public double calculate(double current) {
-        final double error = target - current;
+        error = target - current;
 
         integral += error;
 
         final double derivative = error - previousError;
-        previousError = error;
 
         return (kP * error) + (kI * integral) + (kD * derivative);
-    }
-
-
-    public static double getModuleOfDifferent(double current, double target) {
-        return Math.abs(target - current);
     }
 }
