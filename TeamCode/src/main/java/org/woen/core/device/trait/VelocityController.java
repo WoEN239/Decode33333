@@ -4,7 +4,11 @@ package org.woen.core.device.trait;
 public interface VelocityController {
     enum ControlMode {
         RAW,
-        PID,
+        PID;
+
+        public boolean isPIDControlled() {
+            return this == PID;
+        }
     }
 
 
@@ -13,8 +17,8 @@ public interface VelocityController {
 
     void setPIDCoefficients(double kP, double kI, double kD);
 
-    double getVelocityTarget();
-    void setVelocityTarget(double target);
+    double getTargetVelocity();
+    void setTargetVelocity(double target);
     void velocityTick();
 
     double getVelocity();
@@ -22,5 +26,8 @@ public interface VelocityController {
     /**
      * Combination of setVelocityTarget() und velocityTick()
      */
-    void setVelocity(double velocity);
+    default void setVelocity(double velocity) {
+        setTargetVelocity(velocity);
+        velocityTick();
+    }
 }

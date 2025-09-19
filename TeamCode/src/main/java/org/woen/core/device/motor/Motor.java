@@ -4,10 +4,8 @@ package org.woen.core.device.motor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 import org.woen.core.device.trait.Directional;
-import org.woen.core.device.trait.Encoder;
 import org.woen.core.device.trait.VelocityController;
 import org.woen.core.util.PIDController;
-import org.woen.core.util.UnimplementedException;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -19,7 +17,7 @@ public class Motor extends Device implements VelocityController, Directional {
     protected DcMotorEx device;
     protected ControlMode velocityControlMode;
     protected PIDController pidController;
-    protected double powerError;
+    protected double allowedPowerError;
 
 
     public Motor(String name) {
@@ -27,7 +25,7 @@ public class Motor extends Device implements VelocityController, Directional {
         device = null;
         velocityControlMode = ControlMode.PID;
         pidController = new PIDController(1, 1, 1);
-        powerError = 0.01;
+        allowedPowerError = 0.01;
     }
 
     @Override
@@ -45,12 +43,12 @@ public class Motor extends Device implements VelocityController, Directional {
         return device != null;
     }
 
-    public double getPowerError() {
-        return powerError;
+    public double getAllowedPowerError() {
+        return allowedPowerError;
     }
 
-    public void setPowerError(double error) {
-        powerError = Math.abs(error);
+    public void setAllowedPowerError(double error) {
+        allowedPowerError = Math.abs(error);
     }
 
     public double getPower() {
@@ -61,9 +59,7 @@ public class Motor extends Device implements VelocityController, Directional {
      * Do not use this method for
      * velocity (speed) control
      * because you may break the motor,
-     * instead use class EncoderMotor
-     * or use class Motor combined
-     * with class Odometer (own impl).
+     * instead use setVelocity()
      *
      * @param power the new motor's power level in the range [-1; 1]
      */
@@ -126,34 +122,35 @@ public class Motor extends Device implements VelocityController, Directional {
     }
 
     @Override
-    public double getVelocityTarget() {
+    public double getTargetVelocity() {
         return pidController.getTarget();
     }
 
     @Override
-    public void setVelocityTarget(double target) {
+    public void setTargetVelocity(double target) {
         pidController.setTarget(Motor.normalizePower(target));
     }
 
     @Override
     public void velocityTick() {
         final double currentVelocity = getVelocity();
-        final double targetVelocity = getVelocityTarget();
+        final double targetVelocity = getTargetVelocity();
 
         if (currentVelocity == targetVelocity) return;
 
         final double newVelocity;
 
-        if (velocityControlMode == ControlMode.RAW) {
-            newVelocity = targetVelocity;
-        } else {
+        if (velocityControlMode == ControlMode.PID) {
             final double calculatedVelocity =
                     Motor.normalizePower(pidController.calculate(currentVelocity));
 
             newVelocity =
-                    (Math.abs(pidController.getLastError()) > powerError)
+                    (Math.abs(pidController.getLastError()) > allowedPowerError)
                     ? calculatedVelocity
                     : targetVelocity;
+        } else {
+            // Raw mode, just set power to targetVelocity
+            newVelocity = targetVelocity;
         }
 
         setPower(newVelocity);
@@ -168,13 +165,6 @@ public class Motor extends Device implements VelocityController, Directional {
     public double getVelocity() {
         return getPower();
     }
-
-    @Override
-    public void setVelocity(double newVelocity) {
-        setVelocityTarget(newVelocity);
-        velocityTick();
-    }
-
 
 
     public static double normalizePower(double power) {
