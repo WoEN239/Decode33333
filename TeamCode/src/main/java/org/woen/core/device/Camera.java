@@ -1,24 +1,24 @@
-package org.woen.core.opencv;
+package org.woen.core.device;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
-public class Camera {
-    public OpenCvWebcam camera;
-    private boolean isInitialized = false;
+public abstract class Camera {
+    protected OpenCvWebcam camera;
+    protected boolean isInitialized = false;
+    protected final String name;
 
 
-    private Camera() {
+    protected Camera(String name) {
+        this.name = name;
     }
-    public void init(HardwareMap hardwareMap, String CameraName) {
+    public void initialize(HardwareMap hardwareMap) {
         int MonitorId = hardwareMap.appContext.getResources().getIdentifier("MonitorId", "id", hardwareMap.appContext.getPackageName());
-        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, CameraName), MonitorId);
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, name), MonitorId);
         isInitialized = true;
     }
 
@@ -28,6 +28,7 @@ public class Camera {
                 @Override
                 public void onOpened() {
                     camera.startStreaming(width, height, rotate);
+                    cameraSetup();
                 }
 
                 @Override
@@ -40,5 +41,10 @@ public class Camera {
 
     public void stopStreaming() {
         camera.stopStreaming();
+    }
+    protected abstract void cameraSetup();
+
+    public boolean isInitialized() {
+        return isInitialized;
     }
 }
