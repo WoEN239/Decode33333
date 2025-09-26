@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.trait.Encoder;
 import org.woen.core.device.trait.VelocityController;
-import org.woen.core.util.UnimplementedException;
 
 
 public class EncoderMotor extends Motor implements VelocityController, Encoder {

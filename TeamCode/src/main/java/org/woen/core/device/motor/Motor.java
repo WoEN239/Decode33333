@@ -24,7 +24,7 @@ public class Motor extends Device implements VelocityController, Directional {
         super(name);
         device = null;
         velocityControlMode = ControlMode.PID;
-        pidController = new PIDController(1, 1, 1);
+        pidController = new PIDController(1, 1, 1, 2);
         allowedPowerError = 0.01;
     }
 
