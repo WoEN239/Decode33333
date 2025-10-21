@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.woen.main.movement.Vehicles;
+import org.woen.main.gun.GunControl;
 
 
 @TeleOp(name="Basic gamepad", group="Dev")
@@ -21,6 +22,8 @@ public class BasicMovement extends OpMode
     private final ElapsedTime runtime = new ElapsedTime();
     IntegratingGyroscope gyro;
     IMU imu;
+    private GunControl gun;
+    public double count;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -28,6 +31,7 @@ public class BasicMovement extends OpMode
     @Override
     public void init() {
         Vehicles.getInstance().initialize(hardwareMap);
+        gun = new GunControl();
 
         imu = hardwareMap.get(IMU.class, "imu");
         RevHubOrientationOnRobot.LogoFacingDirection logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
@@ -69,6 +73,18 @@ public class BasicMovement extends OpMode
         Vehicles.getInstance().moveToDirection(gamepad1.left_stick_x,
                 -gamepad1.left_stick_y,
                 gamepad1.right_trigger - gamepad1.left_trigger);
+        if (gamepad1.dpad_up) {
+            gun.setVelocity(0.6);
+            gun.startShot();
+        } else if (gamepad1.dpad_down) { gun.stopShot(); }
+        if (gamepad1.left_bumper) {
+            count += 0.05;
+            gun.setTowerDegree(count);
+        } else if (gamepad1.right_bumper){
+            count -= 0.05;
+            gun.setTowerDegree(count);
+        }
+
     }
 
     /*
@@ -77,6 +93,7 @@ public class BasicMovement extends OpMode
     @Override
     public void stop() {
         Vehicles.getInstance().moveToDirection(0, 0, 0);
+        gun.stopShot();
     }
 
 }
