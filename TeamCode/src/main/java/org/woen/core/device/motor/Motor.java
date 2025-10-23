@@ -67,18 +67,26 @@ public class Motor extends Device implements VelocityController, Directional {
         device.setPower(power);
     }
 
+    public DcMotor.ZeroPowerBehavior getZeroPowerBehavior() {
+        return device.getZeroPowerBehavior();
+    }
+
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior behavior) {
         device.setZeroPowerBehavior(behavior);
     }
 
     public void stopMotor() {
+        final DcMotor.ZeroPowerBehavior previousBehavior = getZeroPowerBehavior();
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         setPower(0);
+        setZeroPowerBehavior(previousBehavior);
     }
 
     public void brakeMotor() {
+        final DcMotor.ZeroPowerBehavior previousBehavior = getZeroPowerBehavior();
         setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         setPower(0);
+        setZeroPowerBehavior(previousBehavior);
     }
 
     @Override
