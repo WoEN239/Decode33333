@@ -8,6 +8,9 @@ import org.woen.main.gun.GunControl;
 import org.woen.main.movement.Vehicles;
 
 
+/*
+ * Main-wide Robot singleton object
+ */
 public final class Robot implements Initializable {
     private static final Robot INSTANCE = new Robot();
 
