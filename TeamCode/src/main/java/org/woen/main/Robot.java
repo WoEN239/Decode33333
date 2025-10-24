@@ -21,6 +21,10 @@ public final class Robot implements Initializable {
         initialized = false;
     }
 
+    public static Robot getInstance() {
+        return INSTANCE;
+    }
+
     public Vehicles getVehiclesController() {
         return Vehicles.getInstance();
     }
