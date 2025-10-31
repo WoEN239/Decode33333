@@ -1,4 +1,4 @@
-package org.woen.main.gun;
+package org.woen.main.modules;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -7,14 +7,13 @@ import org.woen.core.device.servomotor.Servomotor;
 import org.woen.core.device.trait.Initializable;
 import org.woen.core.device.motor.Motor;
 
-
 @Config
 public final class GunControl implements Initializable {
-    private static final GunControl INSTANCE = new GunControl();
+    private static final org.woen.main.gun.GunControl INSTANCE = new org.woen.main.gun.GunControl();
     private final Motor motorRight;
     private final Motor motorLeft;
     private final Servomotor servo;
-    private static double velocity = 0.6;
+    private static double velocity = 0;
     private static double degreeTower = 0;
     public GunControl() {
         motorLeft = new Motor("gun_motor_left");
@@ -22,7 +21,7 @@ public final class GunControl implements Initializable {
         servo = new Servomotor("servo_turn_tower");
     }
 
-    public static GunControl getInstance() {
+    public static org.woen.main.gun.GunControl getInstance() {
         return INSTANCE;
     }
 
@@ -31,7 +30,6 @@ public final class GunControl implements Initializable {
         motorLeft.initialize(hardwareMap);
         motorRight.initialize(hardwareMap);
         servo.initialize(hardwareMap);
-        motorLeft.setDirection(motorLeft.getDirection().inverted());
     }
 
     @Override
@@ -44,7 +42,7 @@ public final class GunControl implements Initializable {
     }
 
     public void setVelocity(double velocity) {
-        GunControl.velocity = velocity;
+        this.velocity = velocity;
         motorLeft.setPower(velocity);
         motorRight.setPower(velocity);
     }
@@ -53,12 +51,12 @@ public final class GunControl implements Initializable {
 
     public void startShot() {
         motorRight.setPower(motorLeft.getVelocity());
-//        motorLeft.setPower(motorLeft.getVelocity());
+        motorLeft.setPower(motorLeft.getVelocity());
     }
 
     public void stopShot() {
         motorRight.stopMotor();
-//        motorLeft.stopMotor();
+        motorLeft.stopMotor();
     }
 
     public void setTowerDegree(double degree) {

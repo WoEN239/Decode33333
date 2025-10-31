@@ -24,6 +24,7 @@ public class Servomotor extends Device {
     private double minPulseWidth = 500;
     private double maxPulseWidth = 2500;
     public Servomotor(String name) {
+        
         super(name);
         device = null;
         currentDegree = 0;
@@ -38,24 +39,20 @@ public class Servomotor extends Device {
     }
 
     @Override
-    public boolean isInitialized() {
-        return device != null;
-    }
+    public boolean isInitialized() { return device != null; }
 
-    public double getCurrentDegree() {
-        return currentDegree;
-    }
+    public double getCurrentDegree() { return currentDegree; }
 
     public void setServoPosition(double degree) {
-        degree = clampDegree(degree);
+        degree = limitDegree(degree);
         double pulseWidth = degreesToMicroseconds(degree);
         device.setPosition(pulseWidthToNormalized(pulseWidth));
         currentDegree = degree;
     }
 
     public void setParameters(double startPos, double targetPos, double maxVelocity, double maxAcceleration) {
-        this.currentDegree = clampDegree(startPos);
-        this.targetDegree = clampDegree(targetPos);
+        this.currentDegree = limitDegree(startPos);
+        this.targetDegree = limitDegree(targetPos);
         this.vmax = maxVelocity;
         this.amax = maxAcceleration;
         this.parametersCalculated = false;
@@ -120,45 +117,30 @@ public class Servomotor extends Device {
         }
     }
 
-    public boolean movementCompleted() {
-        return !motionInProgress;
-    }
-
     public void moveTo(double target, double speed, double acceleration) {
         setParameters(currentDegree, target, speed, acceleration);
         startMovement();
     }
 
-    public boolean isMoving() {
-        return motionInProgress;
-    }
+    public boolean isMoving() { return motionInProgress; }
 
-    public void stop() {
-        motionInProgress = false;
-    }
+    public void stop() { motionInProgress = false; }
     private double degreesToMicroseconds(double degrees) {
         double normalized = (degrees - minDegree) / (maxDegree - minDegree);
         return minPulseWidth + normalized * (maxPulseWidth - minPulseWidth);
     }
 
-    private double pulseWidthToNormalized(double pulseWidth) {
-        return (pulseWidth - minPulseWidth) / (maxPulseWidth - minPulseWidth);
-    }
+    private double pulseWidthToNormalized(double pulseWidth) { return (pulseWidth - minPulseWidth) / (maxPulseWidth - minPulseWidth); }
 
-    private double clampDegree(double degree) {
-        return Math.max(minDegree, Math.min(maxDegree, degree));
-    }
+    private double limitDegree(double degree) { return Math.max(minDegree, Math.min(maxDegree, degree)); }
     public double getTargetDegree() {
         return targetDegree;
     }
 
-    public double getMaxVelocity() {
-        return vmax;
-    }
+    public double getMaxVelocity() { return vmax; }
 
-    public double getMaxAcceleration() {
-        return amax;
-    }
+    public double getMaxAcceleration() { return amax; }
+
 
     public void setServoLimits(double minDegree, double maxDegree, double minPulseWidth, double maxPulseWidth) {
         this.minDegree = minDegree;

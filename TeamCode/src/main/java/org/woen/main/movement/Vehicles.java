@@ -40,8 +40,8 @@ public final class Vehicles implements Initializable {
          * motors will rotate backward.
          * We should change their direction.
          */
-        rightBackMotor.invertDirection();
         leftBackMotor.invertDirection();
+        leftFrontMotor.invertDirection();
     }
 
     @Override
@@ -54,15 +54,19 @@ public final class Vehicles implements Initializable {
 
     public void moveToDirection(double forward, double horizontal, double turn) {
         //! TODO: code normal implementation
+        double deadZone = 0.1;
+        if (Math.abs(forward) < deadZone) forward = 0;
+        if (Math.abs(horizontal) < deadZone) horizontal = 0;
+        if (Math.abs(turn) < deadZone) turn = 0;
 
         double frontLeftPower = Motor.normalizePower(forward + horizontal + turn);
         double frontRightPower = Motor.normalizePower(forward - horizontal - turn);
         double backLeftPower = Motor.normalizePower(forward - horizontal + turn);
         double backRightPower = Motor.normalizePower(forward + horizontal - turn);
 
-        leftFrontMotor.setVelocity(frontLeftPower);
-        leftBackMotor.setVelocity(backLeftPower);
-        rightFrontMotor.setVelocity(frontRightPower);
-        rightBackMotor.setVelocity(backRightPower);
+        leftFrontMotor.setPower(frontLeftPower);
+        leftBackMotor.setPower(backLeftPower);
+        rightFrontMotor.setPower(frontRightPower);
+        rightBackMotor.setPower(backRightPower);
     }
 }

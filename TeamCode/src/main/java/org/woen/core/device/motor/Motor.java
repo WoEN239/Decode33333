@@ -162,10 +162,11 @@ public class Motor extends Device implements VelocityController, Directional {
             final double calculatedVelocity =
                     Motor.normalizePower(pidController.calculate(currentVelocity));
 
-            newVelocity =
-                    (Math.abs(pidController.getLastError()) > allowedPowerError)
-                    ? calculatedVelocity
-                    : targetVelocity;
+            newVelocity = calculatedVelocity;
+//            newVelocity =
+//                    (Math.abs(pidController.getLastError()) > allowedPowerError)
+//                    ? calculatedVelocity
+//                    : targetVelocity;
         } else {
             // Raw mode, just set power to targetVelocity
             newVelocity = targetVelocity;
