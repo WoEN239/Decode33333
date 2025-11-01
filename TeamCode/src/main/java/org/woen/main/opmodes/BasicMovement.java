@@ -16,7 +16,6 @@ import org.woen.main.movement.Vehicles;
 import org.woen.main.gun.GunControl;
 import org.woen.main.modules.TransferBall;
 
-
 @TeleOp(name="Basic gamepad", group="Dev")
 public class BasicMovement extends OpMode
 {
@@ -28,6 +27,8 @@ public class BasicMovement extends OpMode
     private TransferBall transfer;
     public double degreeGunTower;
     public boolean stateFlow = false;
+    public boolean stateGun = false;
+    public double velocityGun = 0.6;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -60,8 +61,6 @@ public class BasicMovement extends OpMode
      */
     @Override
     public void loop() {
-        boolean stateFlow = false;
-        boolean stateGun = false;
         FtcDashboard.getInstance().getTelemetry().addData("Velocity Gun:", GunControl.getInstance().getVelocity());
         FtcDashboard.getInstance().getTelemetry().update();
         if (gamepad1.triangle) { stateFlow = true; }
@@ -76,27 +75,39 @@ public class BasicMovement extends OpMode
                 gamepad1.left_stick_x,
                 gamepad1.right_stick_x);
         TransferBall.getInstance().startBrush();
+        GunControl.getInstance().setVelocity(velocityGun);
         if (stateGun) {
             GunControl.getInstance().setVelocity(GunControl.getInstance().getVelocity());
         } else { GunControl.getInstance().stopShot(); }
-//        if (gamepad1.left_bumper) {
-//            degreeGunTower += 0.05;
-//            gun.setTowerDegree(degreeGunTower);
-//        } else if (gamepad1.right_bumper){
-//            degreeGunTower -= 0.05;
-//            gun.setTowerDegree(degreeGunTower);
-//        }
-//        if (gamepad1.square) {
-//            transfer.setDegreeServo(0.4);
-//        } else {
-//            transfer.setDegreeServo(0.1);
-//        }
-        if (stateFlow) {
+        if (gamepad1.left_bumper) {
+            degreeGunTower += 0.05;
+            GunControl.getInstance().setTowerDegree(degreeGunTower);
+        } else if (gamepad1.right_bumper){
+            degreeGunTower -= 0.05;
+            GunControl.getInstance().setTowerDegree(degreeGunTower);
+        }
+        if (gamepad1.square) {
+            TransferBall.getInstance().setDegreeServo(0.0);
+        } else {
+            TransferBall.getInstance().setDegreeServo(0.5);
+            }
+        if (gamepad1.circle) {
             TransferBall.getInstance().startFlow();
         } else {
             TransferBall.getInstance().stopFlow();
         }
 
+       /* if (gamepad1.dpad_left) {
+            velocityGun += 0.05;
+            if (velocityGun > 1) velocityGun = 1;
+            GunControl.getInstance().setVelocity(velocityGun);
+        } else if (gamepad1.dpad_right) {
+            velocityGun -= 0.05;
+            if (velocityGun < 0) velocityGun = 0;
+            GunControl.getInstance().setVelocity(velocityGun);
+        }
+
+        */
 
 
     }
