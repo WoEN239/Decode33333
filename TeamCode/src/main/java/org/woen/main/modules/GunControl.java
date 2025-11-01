@@ -13,8 +13,8 @@ public final class GunControl implements Initializable {
     private final Motor motorRight;
     private final Motor motorLeft;
     private final Servomotor servo;
-    private static double velocity = 0;
-    private static double degreeTower = 0;
+    public static double velocity = 0;
+    public static double degreeTower = 0;
     public GunControl() {
         motorLeft = new Motor("gun_motor_left");
         motorRight = new Motor("gun_motor_right");

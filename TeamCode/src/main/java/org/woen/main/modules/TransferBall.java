@@ -1,19 +1,22 @@
 package org.woen.main.modules;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.servomotor.Servomotor;
 import org.woen.core.device.trait.Initializable;
 import org.woen.core.device.motor.Motor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+@Config
 public class TransferBall implements Initializable {
     private static final org.woen.main.modules.TransferBall INSTANCE = new org.woen.main.modules.TransferBall();
     private final Motor motorFlow;
     private final Motor motorBrush;
     private final Servomotor servoToGun;
-    private double velocityFlow = 0.7;
+    private static double velocityFlow = 0.7;
     private static double velocityBrush = 0.9;
-    private double degreeServo = 0.1;
+    private static double degreeServo = 0.1;
 
     public TransferBall() {
         motorFlow = new Motor("motor_flow");
