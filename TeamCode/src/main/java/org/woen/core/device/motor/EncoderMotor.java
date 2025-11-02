@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.trait.Encoder;
-import org.woen.core.device.trait.VelocityController;
 
 
 public class EncoderMotor extends Motor implements Encoder {

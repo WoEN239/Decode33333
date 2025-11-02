@@ -1,10 +1,10 @@
 package org.woen.core.util.pid;
 
 
+import org.woen.core.util.Constants;
+
+
 public final class PIDController {
-    public static final double SECONDS_IN_NANOSECOND = 1.E-9;
-
-
     private PIDCoefficients coefficients;
 
     private double lastError;
@@ -75,7 +75,8 @@ public final class PIDController {
         final double error = target - current;
 
         final double currentNanoTimeStamp = System.nanoTime();
-        final double dT = (currentNanoTimeStamp - lastNanoTimeStamp) / SECONDS_IN_NANOSECOND;
+        final double dT =
+                (currentNanoTimeStamp - lastNanoTimeStamp) / Constants.SECONDS_IN_NANOSECOND;
         lastNanoTimeStamp = currentNanoTimeStamp;
 
         integral += error * coefficients.getKI() * dT;
