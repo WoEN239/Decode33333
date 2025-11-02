@@ -1,12 +1,11 @@
-package org.woen.core.util;
+package org.woen.core.util.pid;
 
 
 public final class PIDController {
     public static final double SECONDS_IN_NANOSECOND = 1.E-9;
 
-    private double kP;
-    private double kI;
-    private double kD;
+
+    private PIDCoefficients coefficients;
 
     private double lastError;
     private double integral;
@@ -27,10 +26,25 @@ public final class PIDController {
         lastNanoTimeStamp = System.nanoTime();
     }
 
+    public PIDController(PIDCoefficients coefficients, double integralLimit) {
+        this(coefficients.getKP(),
+                coefficients.getKI(),
+                coefficients.getKD(),
+                integralLimit);
+    }
+
+    public PIDCoefficients getCoefficients() {
+        return coefficients;
+    }
+
+    public void setCoefficients(PIDCoefficients coefficients) {
+        this.coefficients = coefficients;
+    }
+
     public void setCoefficients(double kP, double kI, double kD) {
-        this.kP = kP;
-        this.kI = kI;
-        this.kD = kD;
+        coefficients.setKP(kP);
+        coefficients.setKI(kI);
+        coefficients.setKD(kD);
     }
 
     public double getIntegralLimit() {
@@ -64,7 +78,7 @@ public final class PIDController {
         final double dT = (currentNanoTimeStamp - lastNanoTimeStamp) / SECONDS_IN_NANOSECOND;
         lastNanoTimeStamp = currentNanoTimeStamp;
 
-        integral += error * kI * dT;
+        integral += error * coefficients.getKI() * dT;
         if (Math.abs(integral) > integralLimit) {
             integral = integralLimit * Math.signum(integral);
         }
@@ -72,6 +86,6 @@ public final class PIDController {
         final double derivative = (error - lastError) / dT;
         lastError = error;
 
-        return (kP * error) + integral + (kD * derivative);
+        return (coefficients.getKP() * error) + integral + (coefficients.getKD() * derivative);
     }
 }

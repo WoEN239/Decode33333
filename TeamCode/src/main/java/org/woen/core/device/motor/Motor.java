@@ -5,7 +5,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 import org.woen.core.device.trait.Directional;
 import org.woen.core.device.trait.VelocityController;
-import org.woen.core.util.PIDController;
+import org.woen.core.util.pid.PIDController;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
