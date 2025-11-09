@@ -14,9 +14,9 @@ public class TransferBall implements Initializable {
     private final Motor motorFlow;
     private final Motor motorBrush;
     private final Servomotor servoToGun;
-    private static double velocityFlow = 0.7;
-    private static double velocityBrush = 0.9;
-    private static double degreeServo = 0.1;
+    public static double velocityFlow = 0.7;
+    public static double velocityBrush = 0.9;
+    public static double degreeServo = 0.1;
 
     public TransferBall() {
         motorFlow = new Motor("motor_flow");
@@ -33,12 +33,12 @@ public class TransferBall implements Initializable {
         motorFlow.initialize(hardwareMap);
         motorBrush.initialize(hardwareMap);
         servoToGun.initialize(hardwareMap);
-        motorBrush.setDirection(motorBrush.getDirection().inverted());
+//        motorBrush.setDirection(motorBrush.getDirection().inverted());
     }
 
     @Override
     public boolean isInitialized() {
-        return motorFlow.isInitialized() && motorBrush.isInitialized() && servoToGun.isInitialized();
+        return motorFlow.isInitialized() && servoToGun.isInitialized();
     }
 
     public void setVelocityFlow(double velocity) { velocityFlow = velocity; }
@@ -51,6 +51,10 @@ public class TransferBall implements Initializable {
 
     public void setDegreeServo(double degree) {
         degreeServo = degree;
+        servoToGun.setServoPosition(degreeServo);
+    }
+
+    public void kickBall() {
         servoToGun.setServoPosition(degreeServo);
     }
 

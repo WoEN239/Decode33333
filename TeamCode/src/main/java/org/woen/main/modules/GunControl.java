@@ -6,61 +6,61 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.woen.core.device.servomotor.Servomotor;
 import org.woen.core.device.trait.Initializable;
 import org.woen.core.device.motor.Motor;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.woen.core.device.sensor.SensorVoltage;
 
 @Config
 public final class GunControl implements Initializable {
-    private static final org.woen.main.gun.GunControl INSTANCE = new org.woen.main.gun.GunControl();
-    private final Motor motorRight;
+    private static final org.woen.main.modules.GunControl INSTANCE = new org.woen.main.modules.GunControl();
+//    private final Motor motorRight;
+    public ElapsedTime runtime = new ElapsedTime();
     private final Motor motorLeft;
     private final Servomotor servo;
-    public static double velocity = 0;
-    public static double degreeTower = 0;
+    private SensorVoltage sensorVoltage;
+    public static double velocity = -0.55;
+    public static double degreeTower = 0.0;
+
     public GunControl() {
         motorLeft = new Motor("gun_motor_left");
-        motorRight = new Motor("gun_motor_right");
+//        motorRight = new Motor("gun_motor_right");
         servo = new Servomotor("servo_turn_tower");
     }
 
-    public static org.woen.main.gun.GunControl getInstance() {
+    public static org.woen.main.modules.GunControl getInstance() {
         return INSTANCE;
     }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
         motorLeft.initialize(hardwareMap);
-        motorRight.initialize(hardwareMap);
+//        motorRight.initialize(hardwareMap);
         servo.initialize(hardwareMap);
+        sensorVoltage = new SensorVoltage(hardwareMap);
     }
 
     @Override
     public boolean isInitialized() {
-        return motorLeft.isInitialized() && motorRight.isInitialized() && servo.isInitialized();
+        return motorLeft.isInitialized() && servo.isInitialized() && sensorVoltage != null;
     }
 
-    public void invertDirection(Motor motor) {
-        motor.setDirection(motor.getDirection().inverted());
+    public double getVelocity() {
+        return velocity;
     }
-
-    public void setVelocity(double velocity) {
-        this.velocity = velocity;
-        motorLeft.setPower(velocity);
-        motorRight.setPower(velocity);
-    }
-
-    public double getVelocity() { return velocity; }
 
     public void startShot() {
-        motorRight.setPower(motorLeft.getVelocity());
-        motorLeft.setPower(motorLeft.getVelocity());
+        motorLeft.setPower(sensorVoltage.calculateCoefficientVoltage(velocity));
+//        motorRight.setPower(sensorVoltage.calculateCoefficientVoltage(velocity));
     }
 
     public void stopShot() {
-        motorRight.stopMotor();
+//        motorRight.stopMotor();
         motorLeft.stopMotor();
     }
 
     public void setTowerDegree(double degree) {
-        this.degreeTower = degree;
+        degreeTower = degree;
         servo.setServoPosition(degree * 3);
     }
 

@@ -4,8 +4,8 @@ package org.woen.core.device.motor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 import org.woen.core.device.trait.Directional;
-import org.woen.core.util.pid.PIDCoefficients;
-import org.woen.core.util.pid.PIDController;
+import org.woen.core.device.trait.VelocityController;
+import org.woen.core.util.PIDController;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,29 +13,19 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-public class Motor extends Device implements Directional {
-    public enum RunMode {
-        RAW,
-        PID;
-    }
-
-
+public class Motor extends Device implements VelocityController, Directional {
     protected DcMotorEx device;
-    protected RunMode runMode;
+    protected ControlMode velocityControlMode;
     protected PIDController pidController;
     protected double allowedPowerError;
 
 
-    public Motor(String name, double kP, double kI, double kD) {
+    public Motor(String name) {
         super(name);
         device = null;
-        runMode = RunMode.PID;
-        pidController = new PIDController(kP, kI, kD, 2);
+        velocityControlMode = ControlMode.PID;
+        pidController = new PIDController(1, 1, 1, 2);
         allowedPowerError = 0.01;
-    }
-
-    public Motor(String name) {
-        this(name, 0, 0, 0);
     }
 
     @Override
@@ -44,13 +34,21 @@ public class Motor extends Device implements Directional {
 
         device = hardwareMap.get(DcMotorEx.class, name);
 
-        setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
+        setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public boolean isInitialized() {
         return device != null;
+    }
+
+    public double getAllowedPowerError() {
+        return allowedPowerError;
+    }
+
+    public void setAllowedPowerError(double error) {
+        allowedPowerError = Math.abs(error);
     }
 
     public double getPower() {
@@ -131,29 +129,27 @@ public class Motor extends Device implements Directional {
         return device.getCurrent(unit);
     }
 
-    public double getVelocity() {
-        return getPower();
+    @Override
+    public ControlMode getVelocityControlMode() {
+        return velocityControlMode;
     }
 
-    /**
-     * Combination of setVelocityTarget() und velocityTick()
-     * <p>
-     * Try use these two above methods instead of setVelocity()
-     * if you can
-     */
-    public void setVelocity(double velocity) {
-        setTargetVelocity(velocity);
-        velocityTick();
+    @Override
+    public void setVelocityControlMode(ControlMode mode) {
+        velocityControlMode = mode;
     }
 
+    @Override
     public double getTargetVelocity() {
         return pidController.getTarget();
     }
 
+    @Override
     public void setTargetVelocity(double target) {
         pidController.setTarget(Motor.normalizePower(target));
     }
 
+    @Override
     public void velocityTick() {
         final double currentVelocity = getVelocity();
         final double targetVelocity = getTargetVelocity();
@@ -162,14 +158,15 @@ public class Motor extends Device implements Directional {
 
         final double newVelocity;
 
-        if (runMode == RunMode.PID) {
+        if (velocityControlMode == ControlMode.PID) {
             final double calculatedVelocity =
                     Motor.normalizePower(pidController.calculate(currentVelocity));
 
-            newVelocity =
-                    (Math.abs(pidController.getLastError()) > allowedPowerError)
-                    ? calculatedVelocity
-                    : targetVelocity;
+            newVelocity = calculatedVelocity;
+//            newVelocity =
+//                    (Math.abs(pidController.getLastError()) > allowedPowerError)
+//                    ? calculatedVelocity
+//                    : targetVelocity;
         } else {
             // Raw mode, just set power to targetVelocity
             newVelocity = targetVelocity;
@@ -178,16 +175,14 @@ public class Motor extends Device implements Directional {
         setPower(newVelocity);
     }
 
-    public PIDCoefficients getPIDCoefficients() {
-        return pidController.getCoefficients();
-    }
-
-    public void setPIDCoefficients(PIDCoefficients coefficients) {
-        pidController.setCoefficients(coefficients);
-    }
-
+    @Override
     public void setPIDCoefficients(double kP, double kI, double kD) {
         pidController.setCoefficients(kP, kI, kD);
+    }
+
+    @Override
+    public double getVelocity() {
+        return getPower();
     }
 
 

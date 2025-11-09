@@ -4,12 +4,15 @@ package org.woen.main.movement;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.motor.Motor;
+import org.woen.core.device.odometer.Odometer;
 import org.woen.core.device.trait.Initializable;
 
 
 public final class Vehicles implements Initializable {
     private static final Vehicles INSTANCE = new Vehicles();
 
+    private final Odometer odometerX;
+    private final Odometer odometerY;
     private final Motor leftFrontMotor;
     private final Motor rightFrontMotor;
     private final Motor leftBackMotor;
@@ -21,6 +24,8 @@ public final class Vehicles implements Initializable {
         rightFrontMotor = new Motor("right_front_vehicle_motor");
         leftBackMotor = new Motor("left_back_vehicle_motor");
         rightBackMotor = new Motor("right_back_vehicle_motor");
+        odometerX = new Odometer("OdometerX");
+        odometerY = new Odometer("motor_flow");
     }
 
     public static Vehicles getInstance() {
@@ -33,6 +38,8 @@ public final class Vehicles implements Initializable {
         leftBackMotor.initialize(hardwareMap);
         rightFrontMotor.initialize(hardwareMap);
         rightBackMotor.initialize(hardwareMap);
+        odometerX.initialize(hardwareMap);
+        odometerY.initialize(hardwareMap);
 
         /*
          * Motor by default rotates clockwise
@@ -42,6 +49,8 @@ public final class Vehicles implements Initializable {
          */
         leftBackMotor.invertDirection();
         leftFrontMotor.invertDirection();
+        odometerX.resetEncoder();
+        odometerY.resetEncoder();
     }
 
     @Override
@@ -49,7 +58,7 @@ public final class Vehicles implements Initializable {
         return leftFrontMotor.isInitialized()
                 && rightFrontMotor.isInitialized()
                 && leftBackMotor.isInitialized()
-                && rightBackMotor.isInitialized();
+                && rightBackMotor.isInitialized() && odometerX.isInitialized();
     }
 
     public void moveToDirection(double forward, double horizontal, double turn) {
@@ -68,5 +77,13 @@ public final class Vehicles implements Initializable {
         leftBackMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightBackMotor.setPower(backRightPower);
+    }
+
+    public double getPositionOdometerX() {
+        return odometerX.getEncoderPosition();
+    }
+
+    public double getPositionOdometerY() {
+        return odometerY.getEncoderPosition();
     }
 }

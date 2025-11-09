@@ -44,8 +44,6 @@ public class Servomotor extends Device {
     public double getCurrentDegree() { return currentDegree; }
 
     public void setServoPosition(double degree) {
-        degree = limitDegree(degree);
-        double pulseWidth = degreesToMicroseconds(degree);
         device.setPosition(degree);
         currentDegree = degree;
     }
