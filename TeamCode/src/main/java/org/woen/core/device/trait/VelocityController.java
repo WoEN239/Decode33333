@@ -21,7 +21,6 @@ public interface VelocityController {
     void setTargetVelocity(double target);
     void velocityTick();
 
-    double getVelocity();
 
     /**
      * Combination of setVelocityTarget() und velocityTick()

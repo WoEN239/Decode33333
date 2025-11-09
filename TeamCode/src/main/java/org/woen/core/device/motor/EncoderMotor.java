@@ -23,6 +23,7 @@ public class EncoderMotor extends Motor implements VelocityController, Encoder {
     public void resetEncoder() {
         device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        device.getVelocity();
     }
 
     @Override

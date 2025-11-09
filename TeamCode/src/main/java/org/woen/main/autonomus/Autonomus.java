@@ -41,13 +41,17 @@ public class Autonomus extends LinearOpMode {
             while (opModeIsActive()) {
                 while (AprilTag.getInstance().getPosAprilY() < 37) {
                     GunControl.getInstance().startShot();
+                    if (GunControl.getInstance().getEncoderPos() < 1000) {
+                        TransferBall.getInstance().stopFlow();
+                    }
 //                    Vehicles.getInstance().moveToDirection(-0.3,
 //                            0.3,
 //                            0.0);
                     AprilTag.getInstance().telemetryAprilTag();
-                FtcDashboard.getInstance().getTelemetry().addData("Power gun", voltageSensor.getVoltageSensor());
+                    FtcDashboard.getInstance().getTelemetry().addData("Encoder gun", GunControl.getInstance().getEncoderPos());
                     FtcDashboard.getInstance().getTelemetry().update();
                 }
+                GunControl.getInstance().startShot();
 //                if (GunControl.getInstance().getPower() < )
                 Vehicles.getInstance().moveToDirection(0.0,
                         0.0,
@@ -55,7 +59,7 @@ public class Autonomus extends LinearOpMode {
                 TransferBall.getInstance().startFlow();
                 AprilTag.getInstance().telemetryAprilTag();
 //                FtcDashboard.getInstance().getTelemetry().addData("Go back", aprilPosY);
-                FtcDashboard.getInstance().getTelemetry().addData("Power gun", voltageSensor.getVoltageSensor());
+                FtcDashboard.getInstance().getTelemetry().addData("Encoder gun", GunControl.getInstance().getEncoderPos());
                 FtcDashboard.getInstance().getTelemetry().update();
             }
         }
