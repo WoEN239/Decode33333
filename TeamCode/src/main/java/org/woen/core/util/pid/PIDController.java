@@ -76,7 +76,7 @@ public final class PIDController {
 
         final double currentNanoTimeStamp = System.nanoTime();
         final double dT =
-                (currentNanoTimeStamp - lastNanoTimeStamp) / Constants.SECONDS_IN_NANOSECOND;
+                (currentNanoTimeStamp - lastNanoTimeStamp) * Constants.SECONDS_IN_NANOSECOND;
         lastNanoTimeStamp = currentNanoTimeStamp;
 
         integral += error * coefficients.getKI() * dT;
