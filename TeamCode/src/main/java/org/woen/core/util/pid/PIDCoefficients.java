@@ -1,10 +1,12 @@
 package org.woen.core.util.pid;
 
+import com.acmerobotics.dashboard.config.Config;
 
-public final /* data */ class PIDCoefficients {
-    private double kP;
-    private double kI;
-    private double kD;
+@Config
+public /* data */ class PIDCoefficients {
+    public static double kP;
+    public static double kI;
+    public static double kD;
 
 
     public PIDCoefficients(double kP, double kI, double kD) {

@@ -27,7 +27,7 @@ public class BasicMovement extends OpMode
     private GunControl gun;
     private TransferBall transfer;
     private Vision vision;
-    public double degreeGunTower;
+    public static double degreeGunTower = 0;
     public boolean stateFlow = false;
 
     /*
@@ -86,6 +86,7 @@ public class BasicMovement extends OpMode
             degreeGunTower -= 0.05;
             GunControl.getInstance().setTowerDegree(degreeGunTower);
         }
+        GunControl.getInstance().setTowerDegree(GunControl.getInstance().getTowerDegree());
 
         if (gamepad1.square) {
             TransferBall.getInstance().setDegreeServo(TransferBall.getInstance().getDegreeServo() - 0.5);

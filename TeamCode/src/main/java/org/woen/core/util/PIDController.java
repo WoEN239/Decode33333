@@ -15,7 +15,7 @@ public final class PIDController {
 
     private double integralLimit;
 
-    private double lastNanoTimeStamp;
+    private double lastNanoTimeStamp = 0;
 
 
     public PIDController(double kP, double kI, double kD, double integralLimit) {

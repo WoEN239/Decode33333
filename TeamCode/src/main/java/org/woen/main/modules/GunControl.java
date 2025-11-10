@@ -20,12 +20,12 @@ public final class GunControl implements Initializable {
     private final Motor motorLeft;
     private final Servomotor servo;
     private SensorVoltage sensorVoltage;
-    public static double velocity;
-    public static double degreeTower = 0.0;
+    public static double velocity = 0;
+    public static double degreeTower = 0.35;
 
-    public static double p;
-    public static double i;
-    public static double d;
+    public static double p = 0.0;
+    public static double i = 0.0;
+    public static double d = 0.0;
 
     public GunControl() {
         motorLeft = new Motor("gun_motor_left");
@@ -56,13 +56,13 @@ public final class GunControl implements Initializable {
 
     public void startShot() {
 
-        FtcDashboard.getInstance().getTelemetry().addData("startShot", true);
+        FtcDashboard.getInstance().getTelemetry().addData("startShot", 1);
 
         FtcDashboard.getInstance().getTelemetry().update();
         motorLeft.setPIDCoefficients(p, i, d);
         motorLeft.setTargetVelocity(velocity);  // sensorVoltage.calculateCoefficientVoltage(velocity)
         motorLeft.velocityTick();
-        FtcDashboard.getInstance().getTelemetry().addData("stopShot", true);
+        FtcDashboard.getInstance().getTelemetry().addData("stopShot", 1);
         FtcDashboard.getInstance().getTelemetry().update();
 //        motorRight.setPower(sensorVoltage.calculateCoefficientVoltage(velocity));
     }
@@ -74,7 +74,7 @@ public final class GunControl implements Initializable {
 
     public void setTowerDegree(double degree) {
         degreeTower = degree;
-        servo.setServoPosition(degree * 3);
+        servo.setServoPosition(degree);
     }
 
     public double getEncoderPos() {

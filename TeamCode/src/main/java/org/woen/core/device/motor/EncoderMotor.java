@@ -5,10 +5,9 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.trait.Encoder;
-import org.woen.core.device.trait.VelocityController;
 
 
-public class EncoderMotor extends Motor implements VelocityController, Encoder {
+public class EncoderMotor extends Motor implements Encoder {
     public EncoderMotor(String name) {
         super(name);
     }
@@ -23,7 +22,6 @@ public class EncoderMotor extends Motor implements VelocityController, Encoder {
     public void resetEncoder() {
         device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        device.getVelocity();
     }
 
     @Override

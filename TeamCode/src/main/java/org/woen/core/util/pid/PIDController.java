@@ -23,7 +23,7 @@ public final class PIDController {
         setTarget(0);
         lastError = 0;
         integral = 0;
-        lastNanoTimeStamp = System.nanoTime();
+        lastNanoTimeStamp = 0;
     }
 
     public PIDController(PIDCoefficients coefficients, double integralLimit) {

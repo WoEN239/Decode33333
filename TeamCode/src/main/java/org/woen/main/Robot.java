@@ -4,7 +4,7 @@ package org.woen.main;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.trait.Initializable;
-import org.woen.main.gun.GunControl;
+import org.woen.main.modules.GunControl;
 import org.woen.main.movement.Vehicles;
 
 

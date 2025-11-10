@@ -4,31 +4,38 @@ package org.woen.core.device.motor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.woen.core.device.Device;
 import org.woen.core.device.trait.Directional;
-import org.woen.core.device.trait.VelocityController;
-import org.woen.core.util.PIDController;
+import org.woen.core.util.pid.PIDCoefficients;
+import org.woen.core.util.pid.PIDController;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 
-public class Motor extends Device implements VelocityController, Directional {
+public class Motor extends Device implements Directional {
+    public enum RunMode {
+        RAW,
+        PID;
+    }
+
+
     protected DcMotorEx device;
-    protected ControlMode velocityControlMode;
+    protected RunMode runMode;
     protected PIDController pidController;
     protected double allowedPowerError;
-    protected double oldPower;
 
 
-    public Motor(String name) {
+    public Motor(String name, double kP, double kI, double kD) {
         super(name);
         device = null;
-        oldPower = 0;
-        velocityControlMode = ControlMode.PID;
-        pidController = new PIDController(1, 1, 1, 2);
+        runMode = RunMode.PID;
+        pidController = new PIDController(kP, kI, kD, 2);
         allowedPowerError = 0.01;
+    }
+
+    public Motor(String name) {
+        this(name, 0, 0, 0);
     }
 
     @Override
@@ -37,21 +44,13 @@ public class Motor extends Device implements VelocityController, Directional {
 
         device = hardwareMap.get(DcMotorEx.class, name);
 
-        setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
         device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     @Override
     public boolean isInitialized() {
         return device != null;
-    }
-
-    public double getAllowedPowerError() {
-        return allowedPowerError;
-    }
-
-    public void setAllowedPowerError(double error) {
-        allowedPowerError = Math.abs(error);
     }
 
     public double getPower() {
@@ -132,67 +131,74 @@ public class Motor extends Device implements VelocityController, Directional {
         return device.getCurrent(unit);
     }
 
-    @Override
-    public ControlMode getVelocityControlMode() {
-        return velocityControlMode;
+    public double getVelocity() {
+        return getPower();
     }
 
-    @Override
-    public void setVelocityControlMode(ControlMode mode) {
-        velocityControlMode = mode;
+    /**
+     * Combination of setVelocityTarget() und velocityTick()
+     * <p>
+     * Try use these two above methods instead of setVelocity()
+     * if you can
+     */
+    public void setVelocity(double velocity) {
+        setTargetVelocity(velocity);
+        velocityTick();
     }
 
-    @Override
     public double getTargetVelocity() {
         return pidController.getTarget();
     }
 
-    @Override
     public void setTargetVelocity(double target) {
-        pidController.setTarget(target);
+        pidController.setTarget(Motor.normalizePower(target));
     }
 
-    @Override
     public void velocityTick() {
-        final double currentVelocity = device.getVelocity();
+        final double currentVelocity = getVelocity();
+        final double targetVelocity = getTargetVelocity();
 
-        if (currentVelocity == getTargetVelocity()) return;
+        if (currentVelocity == targetVelocity) return;
 
         final double newVelocity;
 
-        if (velocityControlMode == ControlMode.PID) {
-            FtcDashboard.getInstance().getTelemetry().addData("PID", oldPower);
-            newVelocity = Motor.normalizePower(pidController.calculate(currentVelocity) + oldPower);
-//            newVelocity =
-//                    (Math.abs(pidController.getLastError()) > allowedPowerError)
-//                    ? calculatedVelocity
-//                    : targetVelocity;
+        if (runMode == RunMode.PID) {
+            final double calculatedVelocity =
+                    Motor.normalizePower(pidController.calculate(currentVelocity));
+
+            newVelocity =
+                    (Math.abs(pidController.getLastError()) > allowedPowerError)
+                            ? calculatedVelocity
+                            : targetVelocity;
         } else {
             // Raw mode, just set power to targetVelocity
-            newVelocity = getTargetVelocity();
+            newVelocity = targetVelocity;
         }
 
-        oldPower = newVelocity;
-        FtcDashboard.getInstance().getTelemetry().addData("oldPower", 0);
-        FtcDashboard.getInstance().getTelemetry().update();
         setPower(newVelocity);
     }
 
-    @Override
+    public PIDCoefficients getPIDCoefficients() {
+        return pidController.getCoefficients();
+    }
+
+    public void setPIDCoefficients(PIDCoefficients coefficients) {
+        pidController.setCoefficients(coefficients);
+    }
+
     public void setPIDCoefficients(double kP, double kI, double kD) {
         pidController.setCoefficients(kP, kI, kD);
     }
 
-    public double getEncoder() {
-        return device.getCurrentPosition();
-    }
 
-    public double getEncoderVel() {
-        return device.getVelocity();
-    }
     public static double normalizePower(double power) {
         if (power < -1) return -1;
         if (power > 1) return 1;
         return power;
+    }
+
+
+    public double getEncoderVel() {
+        return device.getVelocity();
     }
 }

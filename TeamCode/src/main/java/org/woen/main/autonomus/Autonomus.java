@@ -41,9 +41,6 @@ public class Autonomus extends LinearOpMode {
             while (opModeIsActive()) {
                 while (AprilTag.getInstance().getPosAprilY() < 37) {
                     GunControl.getInstance().startShot();
-                    if (GunControl.getInstance().getEncoderPos() < 1000) {
-                        TransferBall.getInstance().stopFlow();
-                    }
 //                    Vehicles.getInstance().moveToDirection(-0.3,
 //                            0.3,
 //                            0.0);
