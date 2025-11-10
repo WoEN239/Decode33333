@@ -1,6 +1,8 @@
 package org.woen.core.util.pid;
 
+
 import com.acmerobotics.dashboard.config.Config;
+
 
 @Config
 public /* data */ class PIDCoefficients {

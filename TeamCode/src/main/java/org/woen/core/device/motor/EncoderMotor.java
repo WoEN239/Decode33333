@@ -29,3 +29,4 @@ public class EncoderMotor extends Motor implements Encoder {
         return device.getCurrentPosition();
     }
 }
+
