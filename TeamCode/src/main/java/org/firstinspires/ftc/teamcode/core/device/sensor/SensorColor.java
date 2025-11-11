@@ -1,0 +1,49 @@
+package org.firstinspires.ftc.teamcode.core.device.sensor;
+
+import org.firstinspires.ftc.teamcode.core.device.Device;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+
+import android.graphics.Color;
+import androidx.annotation.NonNull;
+
+public class SensorColor extends Device{
+    private ColorSensor device = null;
+
+
+    public SensorColor(String name) {
+        super(name);
+    }
+
+    @Override
+    public void initialize(@NonNull HardwareMap hardwareMap) {
+        if(isInitialized()) return;
+
+        device = hardwareMap.get(ColorSensor.class, name);
+    }
+
+    @Override
+    public boolean isInitialized() {
+        return device != null;
+    }
+
+    public int getRed() {return device.red();}
+
+    public int getGreen() {return device.green();}
+
+    public int getBlue() {return device.blue();}
+
+    public float[] getHSV() {
+        float[] hsv = new float[3];
+        int red = getRed();
+        int green = getGreen();
+        int blue = getBlue();
+        Color.RGBToHSV(red, green, blue, hsv);
+        return hsv;
+    }
+
+    public float getHue() {
+        return getHSV()[0];
+    }
+
+}
