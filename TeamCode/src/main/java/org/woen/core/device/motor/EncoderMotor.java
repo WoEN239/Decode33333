@@ -8,6 +8,9 @@ import org.woen.core.device.trait.Encoder;
 
 
 public class EncoderMotor extends Motor implements Encoder {
+    private double power = 0;
+    private double targetSpeed = 0;
+
     public EncoderMotor(String name) {
         super(name);
     }
@@ -30,8 +33,18 @@ public class EncoderMotor extends Motor implements Encoder {
     }
 
     @Override
-    public double getEncoderVelocity() {
+    public double getEncoderSpeed() {
         return device.getVelocity();
     }
-}
 
+    public void setSpeed(double speed) {
+        targetSpeed = speed;
+        pidController.setTarget(speed);
+    }
+
+    public void speedTick() {
+        double dPower = pidController.calculate(getEncoderSpeed());
+        power = normalizePower(power + dPower);
+        setPower(power);
+    }
+}
