@@ -28,5 +28,10 @@ public class EncoderMotor extends Motor implements Encoder {
     public int getEncoderPosition() {
         return device.getCurrentPosition();
     }
+
+    @Override
+    public double getEncoderVelocity() {
+        return device.getVelocity();
+    }
 }
 
