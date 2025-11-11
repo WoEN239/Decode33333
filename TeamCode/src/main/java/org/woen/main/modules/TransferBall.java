@@ -62,10 +62,10 @@ public class TransferBall implements Initializable {
 
     public void startBrush() { motorBrush.setPower(velocityBrush); }
 
-    public void stopBrush() { motorBrush.stopMotor(); }
+    public void stopBrush() { motorBrush.setPower(0); }
 
     public void startFlow() { motorFlow.setPower(velocityFlow); }
 
-    public void stopFlow() { motorFlow.stopMotor(); }
+    public void stopFlow() { motorFlow.setPower(0); }
 
 }

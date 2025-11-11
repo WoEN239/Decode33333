@@ -39,6 +39,11 @@ public class Odometer extends Device implements Encoder {
     }
 
     @Override
+    public double getEncoderSpeed() {
+        return device.getVelocity();
+    }
+
+    @Override
     public void resetEncoder() {
         device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

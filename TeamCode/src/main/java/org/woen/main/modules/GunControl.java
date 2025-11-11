@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.woen.core.device.servomotor.Servomotor;
 import org.woen.core.device.trait.Initializable;
-import org.woen.core.device.motor.Motor;
+import org.woen.core.device.motor.EncoderMotor;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -17,7 +17,7 @@ public final class GunControl implements Initializable {
     private static final org.woen.main.modules.GunControl INSTANCE = new org.woen.main.modules.GunControl();
 //    private final Motor motorRight;
     public ElapsedTime runtime = new ElapsedTime();
-    private final Motor motorLeft;
+    private final EncoderMotor motorLeft;
     private final Servomotor servo;
     private SensorVoltage sensorVoltage;
     public static double velocity = 0;
@@ -27,8 +27,10 @@ public final class GunControl implements Initializable {
     public static double i = 0.0;
     public static double d = 0.0;
 
+    private int ite = 1;
+
     public GunControl() {
-        motorLeft = new Motor("gun_motor_left");
+        motorLeft = new EncoderMotor("gun_motor_left");
 //        motorRight = new Motor("gun_motor_right");
         servo = new Servomotor("servo_turn_tower");
     }
@@ -55,21 +57,22 @@ public final class GunControl implements Initializable {
     }
 
     public void startShot() {
+        ite += 1;
 
-        FtcDashboard.getInstance().getTelemetry().addData("startShot", 1);
+        FtcDashboard.getInstance().getTelemetry().addData("startShot", ite);
 
         FtcDashboard.getInstance().getTelemetry().update();
         motorLeft.setPIDCoefficients(p, i, d);
-        motorLeft.setTargetVelocity(velocity);  // sensorVoltage.calculateCoefficientVoltage(velocity)
-        motorLeft.velocityTick();
-        FtcDashboard.getInstance().getTelemetry().addData("stopShot", 1);
+        motorLeft.setSpeed(velocity);  // sensorVoltage.calculateCoefficientVoltage(velocity)
+        motorLeft.speedTick();
+        FtcDashboard.getInstance().getTelemetry().addData("stopShot", ite);
         FtcDashboard.getInstance().getTelemetry().update();
 //        motorRight.setPower(sensorVoltage.calculateCoefficientVoltage(velocity));
     }
 
     public void stopShot() {
 //        motorRight.stopMotor();
-        motorLeft.stopMotor();
+        motorLeft.setPower(0);
     }
 
     public void setTowerDegree(double degree) {
@@ -78,7 +81,7 @@ public final class GunControl implements Initializable {
     }
 
     public double getEncoderPos() {
-        return motorLeft.getEncoderVel();
+        return motorLeft.getEncoderSpeed();
     }
 
     public double getTowerDegree() {
