@@ -6,9 +6,9 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public /* data */ class PIDCoefficients {
-    public static double kP;
-    public static double kI;
-    public static double kD;
+    private double kP;
+    private double kI;
+    private double kD;
 
 
     public PIDCoefficients(double kP, double kI, double kD) {
