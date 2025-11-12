@@ -38,7 +38,6 @@ public class PIDRegulator {
     }
     public double PIDGet(double input){
         double err = this.setpoint - input;
-        FtcDashboard.getInstance().getTelemetry().addData("Err", err);
         double d = this.old_err - err;
         double i = this.iniegral_err;
         this.old_err = err;

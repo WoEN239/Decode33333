@@ -62,13 +62,15 @@ public class FFEncoderMotor extends Motor implements Encoder {
 
     public void speedTick() {
         double spd = getEncoderSpeed();
-        double pid_out = pidController.PIDGet(spd);
+        double smoSpd = smoother.smooth(spd);
+        double pid_out = pidController.PIDGet(smoSpd);
         double mul_out = spdMul * pidController.setpoint;
         FtcDashboard.getInstance().getTelemetry().addData("PID out", pid_out);
         FtcDashboard.getInstance().getTelemetry().addData("Mul out", mul_out);
         double power = normalizePower(pid_out + mul_out);
         FtcDashboard.getInstance().getTelemetry().addData("Power", power);
-        FtcDashboard.getInstance().getTelemetry().addData("Speed", spd);
+        FtcDashboard.getInstance().getTelemetry().addData("Speed err", pidController.setpoint - spd);
+        FtcDashboard.getInstance().getTelemetry().addData("Speed err Smooth", pidController.setpoint - smoSpd);
         FtcDashboard.getInstance().getTelemetry().update();
         setPower(power);
     }
