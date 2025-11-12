@@ -42,6 +42,11 @@ public final class PIDController {
     }
 
     public void setCoefficients(double kP, double kI, double kD) {
+        if (coefficients == null) {
+            coefficients = new PIDCoefficients(kP, kI, kD);
+            return;
+        }
+
         coefficients.setKP(kP);
         coefficients.setKI(kI);
         coefficients.setKD(kD);
