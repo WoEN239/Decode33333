@@ -6,6 +6,7 @@ import org.firstinspires.ftc.teamcode.core.device.Device;
 import org.firstinspires.ftc.teamcode.core.device.trait.Directional;
 import org.firstinspires.ftc.teamcode.core.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.core.util.pid.PIDController;
+import org.firstinspires.ftc.teamcode.core.util.pid.PIDRegulator;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -22,8 +23,9 @@ public class Motor extends Device implements Directional {
 
     protected DcMotorEx device;
     protected RunMode runMode;
-    protected PIDController pidController;
+    protected PIDRegulator pidController;
     protected double allowedPowerError;
+    protected boolean inverted = false;
 
 
     public Motor(String name, double kP, double kI, double kD) {
@@ -31,8 +33,7 @@ public class Motor extends Device implements Directional {
         device = null;
         runMode = RunMode.PID;
         allowedPowerError = 0.01;
-        pidController = new PIDController(kP, kI, kD, 2);
-        pidController.setTarget(0);
+        pidController = new PIDRegulator(kP, kI, kD);
     }
 
     public Motor(String name) {
@@ -85,6 +86,7 @@ public class Motor extends Device implements Directional {
 
     @Override
     public void setDirection(Direction direction) {
+        this.inverted = (direction == Direction.REVERSE);
         device.setDirection(direction);
     }
 
@@ -134,11 +136,11 @@ public class Motor extends Device implements Directional {
     }
 
     public double getTargetVelocity() {
-        return pidController.getTarget();
+        return pidController.setpoint;
     }
 
     public void setTargetVelocity(double target) {
-        pidController.setTarget(Motor.normalizePower(target));
+        pidController.setpoint = Motor.normalizePower(target);
     }
 
     public void velocityTick() {
@@ -151,10 +153,10 @@ public class Motor extends Device implements Directional {
 
         if (runMode == RunMode.PID) {
             final double calculatedVelocity =
-                    Motor.normalizePower(pidController.calculate(oldVelocity));
+                    Motor.normalizePower(pidController.PIDGet(oldVelocity));
 
             newVelocity =
-                    (Math.abs(pidController.getLastError()) > allowedPowerError)
+                    (Math.abs(pidController.getOldErr()) > allowedPowerError)
                     ? calculatedVelocity
                     : targetVelocity;
         } else {
@@ -163,14 +165,6 @@ public class Motor extends Device implements Directional {
         }
 
         setPower(oldVelocity + newVelocity);
-    }
-
-    public PIDCoefficients getPIDCoefficients() {
-        return pidController.getCoefficients();
-    }
-
-    public void setPIDCoefficients(PIDCoefficients coefficients) {
-        pidController.setCoefficients(coefficients);
     }
 
     public void setPIDCoefficients(double kP, double kI, double kD) {
