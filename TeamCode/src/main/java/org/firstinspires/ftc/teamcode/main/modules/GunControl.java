@@ -30,8 +30,8 @@ public final class GunControl implements Initializable {
 //    public static double p = 0.000001;
 //    public static double i = 0.0;
 //    public static double d = 0.000005;
-    public static double alpha = 0.05;
-    public static double spdMul = 0.0003;
+    public static double alpha = 1;
+    public static double spdMul = 0.00025;
 
     private int ite = 1;
 

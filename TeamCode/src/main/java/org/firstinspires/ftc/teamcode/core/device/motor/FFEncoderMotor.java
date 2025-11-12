@@ -72,6 +72,6 @@ public class FFEncoderMotor extends Motor implements Encoder {
         FtcDashboard.getInstance().getTelemetry().addData("Speed err", pidController.setpoint - spd);
         FtcDashboard.getInstance().getTelemetry().addData("Speed err Smooth", pidController.setpoint - smoSpd);
         FtcDashboard.getInstance().getTelemetry().update();
-        setPower(power);
+        setPower(voltageSensor.calculateCoefficientVoltage(power));
     }
 }
