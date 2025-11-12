@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.core.device.motor.FFEncoderMotor;
 import org.firstinspires.ftc.teamcode.core.device.servomotor.Servomotor;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
 import org.firstinspires.ftc.teamcode.core.device.motor.EncoderMotor;
@@ -17,21 +18,25 @@ public final class GunControl implements Initializable {
     private static final org.firstinspires.ftc.teamcode.main.modules.GunControl INSTANCE = new org.firstinspires.ftc.teamcode.main.modules.GunControl();
 //    private final Motor motorRight;
     public ElapsedTime runtime = new ElapsedTime();
-    private final EncoderMotor motorLeft;
+    private final FFEncoderMotor motorLeft;
     private final Servomotor servo;
     private SensorVoltage sensorVoltage;
     public static double velocity = 0;
     public static double degreeTower = 0.35;
 
-    public static double p = 0.000001;
+    public static double p = 0.009;
     public static double i = 0.0;
-    public static double d = 0.000005;
-    public static double alpha = 0.05;
+    public static double d = 0.0;
+//    public static double p = 0.000001;
+//    public static double i = 0.0;
+//    public static double d = 0.000005;
+//    public static double alpha = 0.05;
+    public static double spdMul = 0.0003;
 
     private int ite = 1;
 
     public GunControl() {
-        motorLeft = new EncoderMotor("gun_motor_left");
+        motorLeft = new FFEncoderMotor("gun_motor_left");
 //        motorRight = new Motor("gun_motor_right");
         servo = new Servomotor("servo_turn_tower");
     }
@@ -64,7 +69,8 @@ public final class GunControl implements Initializable {
 
         FtcDashboard.getInstance().getTelemetry().update();
         motorLeft.setPIDCoefficients(p, i, d);
-        motorLeft.setAlpha(alpha);
+//        motorLeft.setAlpha(alpha);
+        motorLeft.setSpeedMul(spdMul);
         motorLeft.setSpeed(velocity);  // sensorVoltage.calculateCoefficientVoltage(velocity)
         motorLeft.speedTick();
         FtcDashboard.getInstance().getTelemetry().addData("stopShot", ite);
