@@ -23,9 +23,10 @@ public final class GunControl implements Initializable {
     public static double velocity = 0;
     public static double degreeTower = 0.35;
 
-    public static double p = 0.0;
+    public static double p = 0.000001;
     public static double i = 0.0;
-    public static double d = 0.0;
+    public static double d = 0.000005;
+    public static double alpha = 0.05;
 
     private int ite = 1;
 
@@ -63,6 +64,7 @@ public final class GunControl implements Initializable {
 
         FtcDashboard.getInstance().getTelemetry().update();
         motorLeft.setPIDCoefficients(p, i, d);
+        motorLeft.setAlpha(alpha);
         motorLeft.setSpeed(velocity);  // sensorVoltage.calculateCoefficientVoltage(velocity)
         motorLeft.speedTick();
         FtcDashboard.getInstance().getTelemetry().addData("stopShot", ite);

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.core.device.motor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.core.device.Device;
+import org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage;
 import org.firstinspires.ftc.teamcode.core.device.trait.Directional;
 import org.firstinspires.ftc.teamcode.core.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.core.util.pid.PIDController;
@@ -12,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 
 public class Motor extends Device implements Directional {
@@ -26,6 +28,7 @@ public class Motor extends Device implements Directional {
     protected PIDRegulator pidController;
     protected double allowedPowerError;
     protected boolean inverted = false;
+    protected SensorVoltage voltageSensor;
 
 
     public Motor(String name, double kP, double kI, double kD) {
@@ -43,7 +46,7 @@ public class Motor extends Device implements Directional {
     @Override
     public void initialize(HardwareMap hardwareMap) {
         if (isInitialized()) return;
-
+        voltageSensor = new SensorVoltage(hardwareMap);
         device = hardwareMap.get(DcMotorEx.class, name);
 
         setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);
