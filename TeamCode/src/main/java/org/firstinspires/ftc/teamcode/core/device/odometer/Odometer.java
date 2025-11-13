@@ -39,7 +39,7 @@ public class Odometer extends Device implements Encoder {
     }
 
     @Override
-    public double getEncoderSpeed() {
+    public double getEncoderVelocity() {
         return device.getVelocity();
     }
 

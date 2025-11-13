@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage;
 import org.firstinspires.ftc.teamcode.core.device.trait.Encoder;
 import org.firstinspires.ftc.teamcode.core.util.Smoother;
 import org.firstinspires.ftc.teamcode.core.util.pid.PIDRegulator;
@@ -13,6 +14,9 @@ import org.firstinspires.ftc.teamcode.core.util.pid.PIDRegulator;
 public class FFEncoderMotor extends Motor implements Encoder {
     private double spdMul = 0;
     private Smoother smoother = new Smoother(1, 0);
+    private PIDRegulator pidController;
+    boolean inverted = false;
+    private final SensorVoltage sensorVoltage = new SensorVoltage(null);
 
     public FFEncoderMotor(String name) {
         super(name);
@@ -39,13 +43,17 @@ public class FFEncoderMotor extends Motor implements Encoder {
         }
     }
 
-    @Override
     public double getEncoderSpeed() {
         if(inverted) {
             return -device.getVelocity();
         } else {
             return device.getVelocity();
         }
+    }
+
+    @Override
+    public double getEncoderVelocity() {
+        return getEncoderSpeed();
     }
 
     public void setSpeed(double speed) {
@@ -72,6 +80,6 @@ public class FFEncoderMotor extends Motor implements Encoder {
         FtcDashboard.getInstance().getTelemetry().addData("Speed err", pidController.setpoint - spd);
         FtcDashboard.getInstance().getTelemetry().addData("Speed err Smooth", pidController.setpoint - smoSpd);
         FtcDashboard.getInstance().getTelemetry().update();
-        setPower(voltageSensor.calculateCoefficientVoltage(power));
+        setPower(sensorVoltage.calculateCoefficientVoltage(power));
     }
 }
