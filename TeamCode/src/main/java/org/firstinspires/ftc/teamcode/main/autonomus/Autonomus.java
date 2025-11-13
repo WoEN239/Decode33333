@@ -33,30 +33,29 @@ public class Autonomus extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(AprilTag.getInstance().visionPortal, 30);
         TransferBall.getInstance().initialize(hardwareMap);
         GunControl.getInstance().initialize(hardwareMap);
-        voltageSensor = new SensorVoltage(hardwareMap);
+        voltageSensor.initialize(hardwareMap);
         if (Vehicles.getInstance().isInitialized() && TransferBall.getInstance().isInitialized() && GunControl.getInstance().isInitialized() && Vision.getInstance().isInitialized()) { telemetry.addData("Status", "Initialized"); }
         Vehicles.getInstance().initialize(hardwareMap);
 
         if (opModeIsActive()) {
             while (opModeIsActive()) {
-                while (AprilTag.getInstance().getPosAprilY() < 37) {
-                    GunControl.getInstance().startShot();
+//                while (AprilTag.getInstance().getPosAprilY() < 37) {
+//                    GunControl.getInstance().startShot();
 //                    Vehicles.getInstance().moveToDirection(-0.3,
 //                            0.3,
 //                            0.0);
-                    AprilTag.getInstance().telemetryAprilTag();
-                    FtcDashboard.getInstance().getTelemetry().addData("Encoder gun", GunControl.getInstance().getEncoderPos());
-                    FtcDashboard.getInstance().getTelemetry().update();
-                }
-                GunControl.getInstance().startShot();
-//                if (GunControl.getInstance().getPower() < )
-                Vehicles.getInstance().moveToDirection(0.0,
-                        0.0,
-                        0.0);
-                TransferBall.getInstance().startFlow();
+//                    AprilTag.getInstance().telemetryAprilTag();
+//                    FtcDashboard.getInstance().getTelemetry().update();
+//                }
+//                GunControl.getInstance().startShot();
+////                if (GunControl.getInstance().getPower() < )
+//                Vehicles.getInstance().moveToDirection(0.0,
+//                        0.0,
+//                        0.0);
+//                TransferBall.getInstance().startFlow();
+//                AprilTag.getInstance().telemetryAprilTag();
+//                FtcDashboard.getInstance().getTelemetry().update();
                 AprilTag.getInstance().telemetryAprilTag();
-//                FtcDashboard.getInstance().getTelemetry().addData("Go back", aprilPosY);
-                FtcDashboard.getInstance().getTelemetry().addData("Encoder gun", GunControl.getInstance().getEncoderPos());
                 FtcDashboard.getInstance().getTelemetry().update();
             }
         }

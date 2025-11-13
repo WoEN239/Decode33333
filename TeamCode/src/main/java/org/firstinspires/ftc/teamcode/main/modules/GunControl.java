@@ -50,7 +50,7 @@ public final class GunControl implements Initializable {
         motorLeft.initialize(hardwareMap);
 //        motorRight.initialize(hardwareMap);
         servo.initialize(hardwareMap);
-        sensorVoltage = new SensorVoltage(hardwareMap);
+        sensorVoltage.initialize(hardwareMap);
     }
 
     @Override
@@ -63,17 +63,13 @@ public final class GunControl implements Initializable {
     }
 
     public void startShot() {
-        ite += 1;
-
-        FtcDashboard.getInstance().getTelemetry().addData("startShot", ite);
-
         FtcDashboard.getInstance().getTelemetry().update();
         motorLeft.setPIDCoefficients(p, i, d);
         motorLeft.setAlpha(alpha);
         motorLeft.setSpeedMul(spdMul);
         motorLeft.setSpeed(velocity);  // sensorVoltage.calculateCoefficientVoltage(velocity)
         motorLeft.speedTick();
-        FtcDashboard.getInstance().getTelemetry().addData("stopShot", ite);
+        FtcDashboard.getInstance().getTelemetry().addData("Speed gun", GunControl.getInstance().getSpeedGun());
         FtcDashboard.getInstance().getTelemetry().update();
 //        motorRight.setPower(sensorVoltage.calculateCoefficientVoltage(velocity));
     }
@@ -88,7 +84,7 @@ public final class GunControl implements Initializable {
         servo.setServoPosition(degree);
     }
 
-    public double getEncoderPos() {
+    public double getSpeedGun() {
         return motorLeft.getEncoderSpeed();
     }
 
