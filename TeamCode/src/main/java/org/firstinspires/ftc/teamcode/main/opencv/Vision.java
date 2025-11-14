@@ -24,6 +24,8 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
 
+// coding by Matvey Ivanovv
+
 @Config
 public class Vision implements Initializable {
     private static final org.firstinspires.ftc.teamcode.main.opencv.Vision INSTANCE = new org.firstinspires.ftc.teamcode.main.opencv.Vision();

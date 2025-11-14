@@ -13,6 +13,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage;
 
+// coding by Matvey Ivanovv
+
 @Config
 public final class GunControl implements Initializable {
     private static final org.firstinspires.ftc.teamcode.main.modules.GunControl INSTANCE = new org.firstinspires.ftc.teamcode.main.modules.GunControl();
@@ -33,8 +35,6 @@ public final class GunControl implements Initializable {
     public static double alpha = 1;
     public static double spdMul = 0.00025;
 
-    private int ite = 1;
-
     public GunControl() {
         motorLeft = new FFEncoderMotor("gun_motor_left");
 //        motorRight = new Motor("gun_motor_right");
@@ -49,13 +49,14 @@ public final class GunControl implements Initializable {
     public void initialize(HardwareMap hardwareMap) {
         motorLeft.initialize(hardwareMap);
 //        motorRight.initialize(hardwareMap);
+        SensorVoltage.getInstance().initialize(hardwareMap);
         servo.initialize(hardwareMap);
         sensorVoltage.initialize(hardwareMap);
     }
 
     @Override
     public boolean isInitialized() {
-        return motorLeft.isInitialized() && servo.isInitialized() && sensorVoltage != null;
+        return motorLeft.isInitialized() && servo.isInitialized() && SensorVoltage.getInstance().isInitialized();
     }
 
     public double getVelocity() {

@@ -19,7 +19,9 @@ import org.firstinspires.ftc.teamcode.main.modules.GunControl;
 import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
 import org.firstinspires.ftc.teamcode.main.opencv.Vision;
 
-@TeleOp(name="Basic gamepad", group="Dev")
+// coding by Matvey Ivanovv
+
+@TeleOp(name="TeleOp", group="Dev")
 public class BasicMovement extends OpMode
 {
     // Declare OpMode members.

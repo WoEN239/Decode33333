@@ -20,6 +20,8 @@ import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 
 import java.util.List;
 
+// coding by Matvey Ivanovv
+
 public class AprilTag implements Initializable {
 
     private static final org.firstinspires.ftc.teamcode.main.opencv.AprilTag INSTANCE = new org.firstinspires.ftc.teamcode.main.opencv.AprilTag();
@@ -30,9 +32,16 @@ public class AprilTag implements Initializable {
     public VisionPortal visionPortal;
     private GunControl gun;
     private TransferBall transfer;
-    public double PosAprilX;
-    public double PosAprilY;
-    public double PosAprilZ;
+    private double posAprilX;
+    private double posAprilY;
+    private double posAprilZ;
+    private double id;
+
+    private double bearing;
+
+    private double yaw;
+
+    private double range;
 
     private boolean isInitialized = false;
 
@@ -70,25 +79,38 @@ public class AprilTag implements Initializable {
     }
 
     public double getPosAprilX() {
-        return PosAprilX;
+        return posAprilX;
     }
 
     public double getPosAprilY() {
-        return PosAprilY;
+        return posAprilY;
     }
 
     public double getPosAprilZ() {
-        return PosAprilZ;
+        return posAprilZ;
     }
+
+    public double getId() { return id; }
+
+    public double getBearing() { return bearing; }
+
+    public double getRange() { return range; }
+
+    public double getYaw() { return yaw; }
+
     public void telemetryAprilTag() {
         List<AprilTagDetection> currentDetections = aprilTag.getDetections();
         FtcDashboard.getInstance().getTelemetry().addData("# AprilTags Detected", currentDetections.size());
 
         for (AprilTagDetection detection : currentDetections) {
             if (detection.metadata != null) {
-                PosAprilY = detection.ftcPose.y;
-                PosAprilX = detection.ftcPose.x;
-                PosAprilZ = detection.ftcPose.z;
+                posAprilY = detection.ftcPose.y;
+                posAprilX = detection.ftcPose.x;
+                posAprilZ = detection.ftcPose.z;
+                id = detection.id;
+                bearing = detection.ftcPose.bearing;
+                range = detection.ftcPose.range;
+                yaw = detection.ftcPose.yaw;
                 FtcDashboard.getInstance().getTelemetry().addLine(String.format("\n==== (ID %d) %s", detection.id, detection.metadata.name));
                 FtcDashboard.getInstance().getTelemetry().addLine(String.format("XYZ %6.1f %6.1f %6.1f  (inch)", detection.ftcPose.x, detection.ftcPose.y, detection.ftcPose.z));
 //                FtcDashboard.getInstance().getTelemetry().addLine(String.format("PRY %6.1f %6.1f %6.1f  (deg)", detection.ftcPose.pitch, detection.ftcPose.roll, detection.ftcPose.yaw));

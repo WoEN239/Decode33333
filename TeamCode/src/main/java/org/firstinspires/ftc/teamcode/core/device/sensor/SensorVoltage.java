@@ -7,24 +7,28 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.core.device.Device;
 
+// coding by Matvey Ivanovv
 
-public final class SensorVoltage extends Device {
-    private VoltageSensor voltageSensor;
+public class SensorVoltage extends Device {
+    private static final org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage INSTANCE = new org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage();
+    protected VoltageSensor voltageSensor;
     private double powerInput;
     private double powerOutput;
     private double desiredVoltage = 12.8;
-    private HardwareMap hardwareMap;
 
-    public SensorVoltage(String name) {
-        super(name);
+    public SensorVoltage() {
+        super(null);
         voltageSensor = null;
+    }
+
+    public static org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage getInstance() {
+        return INSTANCE;
     }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
         if (isInitialized()) return;
-        this.hardwareMap = hardwareMap;
-        this.voltageSensor = hardwareMap.voltageSensor.iterator().next();
+        voltageSensor = hardwareMap.voltageSensor.iterator().next();
     }
 
     @Override
