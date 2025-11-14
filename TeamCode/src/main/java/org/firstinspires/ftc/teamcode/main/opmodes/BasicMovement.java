@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.core.device.odometer.Odometer;
+import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
 import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 import org.firstinspires.ftc.teamcode.main.modules.GunControl;
 import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
@@ -40,8 +41,14 @@ public class BasicMovement extends OpMode
         Vehicles.getInstance().initialize(hardwareMap);
         TransferBall.getInstance().initialize(hardwareMap);
         GunControl.getInstance().initialize(hardwareMap);
+        Gyro.getInstance().initialize(hardwareMap);
 //        Vision.getInstance().initialize(hardwareMap);
-        if (Vehicles.getInstance().isInitialized() && TransferBall.getInstance().isInitialized() && GunControl.getInstance().isInitialized() && Vision.getInstance().isInitialized()) { telemetry.addData("Status", "Initialized"); }
+        if (Vehicles.getInstance().isInitialized() &&
+                TransferBall.getInstance().isInitialized() &&
+                GunControl.getInstance().isInitialized() &&
+                Vision.getInstance().isInitialized() &&
+                Gyro.getInstance().isInitialized())
+        { telemetry.addData("Status", "Initialized"); }
 //        Vision.getInstance().startStreaming();
     }
 
@@ -72,6 +79,7 @@ public class BasicMovement extends OpMode
         FtcDashboard.getInstance().getTelemetry().addData("Degree tower:", GunControl.getInstance().getTowerDegree());
         FtcDashboard.getInstance().getTelemetry().addData("OdometerX:", Vehicles.getInstance().getPositionOdometerX());
         FtcDashboard.getInstance().getTelemetry().addData("OdometerY:", Vehicles.getInstance().getPositionOdometerY());
+        FtcDashboard.getInstance().getTelemetry().addData("Yaw:", Gyro.getInstance().getYaw());
         FtcDashboard.getInstance().getTelemetry().update();
 
         Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y,
