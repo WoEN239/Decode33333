@@ -28,7 +28,6 @@ public class Motor extends Device implements Directional {
     protected PIDRegulator pidController;
     protected double allowedPowerError;
     protected boolean inverted = false;
-    protected SensorVoltage voltageSensor;
 
 
     public Motor(String name, double kP, double kI, double kD) {
@@ -46,7 +45,7 @@ public class Motor extends Device implements Directional {
     @Override
     public void initialize(HardwareMap hardwareMap) {
         if (isInitialized()) return;
-        voltageSensor = new SensorVoltage(hardwareMap);
+        SensorVoltage.getInstance().initialize(hardwareMap);
         device = hardwareMap.get(DcMotorEx.class, name);
 
         setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.FLOAT);

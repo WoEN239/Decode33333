@@ -22,7 +22,6 @@ public final class GunControl implements Initializable {
     public ElapsedTime runtime = new ElapsedTime();
     private final FFEncoderMotor motorLeft;
     private final Servomotor servo;
-    private SensorVoltage sensorVoltage;
     public static double velocity = 0;
     public static double degreeTower = 0.35;
 
@@ -51,7 +50,7 @@ public final class GunControl implements Initializable {
 //        motorRight.initialize(hardwareMap);
         SensorVoltage.getInstance().initialize(hardwareMap);
         servo.initialize(hardwareMap);
-        sensorVoltage.initialize(hardwareMap);
+        SensorVoltage.getInstance().initialize(hardwareMap);
     }
 
     @Override
