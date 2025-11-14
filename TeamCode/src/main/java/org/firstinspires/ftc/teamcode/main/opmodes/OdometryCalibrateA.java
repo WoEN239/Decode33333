@@ -68,11 +68,13 @@ public class OdometryCalibrateA extends OpMode
         FtcDashboard.getInstance().getTelemetry().addData("OdometerX:", Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX);
         FtcDashboard.getInstance().getTelemetry().addData("OdometerY:", Vehicles.getInstance().getPositionOdometerY() - zeroOdometerY);
         FtcDashboard.getInstance().getTelemetry().addData("Yaw:", Gyro.getInstance().getYaw() - zeroYaw);
-        FtcDashboard.getInstance().getTelemetry().addData("TicksPerRotX:",
-                (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
-        FtcDashboard.getInstance().getTelemetry().addData("TicksPerRotY:",
-                (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerY) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
-        FtcDashboard.getInstance().getTelemetry().update();
+        if(Gyro.getInstance().getYaw() != zeroYaw) {
+            FtcDashboard.getInstance().getTelemetry().addData("TicksPerRotX:",
+                    (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
+            FtcDashboard.getInstance().getTelemetry().addData("TicksPerRotY:",
+                    (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerY) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
+            FtcDashboard.getInstance().getTelemetry().update();
+        }
 
         Vehicles.getInstance().moveToDirection(0, 0, gamepad1.right_stick_x);
     }
