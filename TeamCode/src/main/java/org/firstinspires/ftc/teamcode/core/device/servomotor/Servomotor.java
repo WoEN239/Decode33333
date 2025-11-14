@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import androidx.annotation.NonNull;
 
+// coding by Matvey Ivanovv
+
 public class Servomotor extends Device {
     private Servo device;
     private double currentDegree;

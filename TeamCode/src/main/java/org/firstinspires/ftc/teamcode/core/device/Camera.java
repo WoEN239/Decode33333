@@ -7,6 +7,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+// coding by Matvey Ivanovv
+
 public abstract class Camera {
     protected OpenCvWebcam camera;
     protected boolean isInitialized = false;
