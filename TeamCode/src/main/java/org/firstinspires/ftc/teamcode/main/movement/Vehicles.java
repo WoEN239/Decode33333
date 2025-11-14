@@ -25,7 +25,7 @@ public final class Vehicles implements Initializable {
         leftBackMotor = new Motor("left_back_vehicle_motor");
         rightBackMotor = new Motor("right_back_vehicle_motor");
         odometerX = new Odometer("OdometerX");
-        odometerY = new Odometer("motor_flow");
+        odometerY = new Odometer("right_back_vehicle_motor");
     }
 
     public static Vehicles getInstance() {
@@ -58,7 +58,7 @@ public final class Vehicles implements Initializable {
         return leftFrontMotor.isInitialized()
                 && rightFrontMotor.isInitialized()
                 && leftBackMotor.isInitialized()
-                && rightBackMotor.isInitialized() && odometerX.isInitialized();
+                && rightBackMotor.isInitialized() && odometerX.isInitialized() && odometerY.isInitialized();
     }
 
     public void moveToDirection(double forward, double horizontal, double turn) {
