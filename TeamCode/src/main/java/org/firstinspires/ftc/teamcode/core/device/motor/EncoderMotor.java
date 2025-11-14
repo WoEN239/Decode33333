@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage;
 import org.firstinspires.ftc.teamcode.core.device.trait.Encoder;
 import org.firstinspires.ftc.teamcode.core.util.Smoother;
+import org.firstinspires.ftc.teamcode.core.util.pid.PIDCoefficients;
 import org.firstinspires.ftc.teamcode.core.util.pid.PIDController;
 
 
@@ -40,16 +41,40 @@ public class EncoderMotor extends Motor implements Encoder {
 
     @Override
     public int getEncoderPosition() {
-        return device.getCurrentPosition() * getDirectionSign();
+        return device.getCurrentPosition() * getDirectionSign(getDirection());
     }
 
     @Override
     public double getEncoderVelocity() {
-        return device.getVelocity() * getDirectionSign();
+        return device.getVelocity() * getDirectionSign(getDirection());
     }
 
-    public void setAlpha(double alpha) {
+    public double getSmootherAlpha() {
+        return smoother.alpha;
+    }
+
+    public void setSmootherAlpha(double alpha) {
         smoother.alpha = alpha;
+    }
+
+    public double getVelocityMultiplier() {
+        return velocityMultiplier;
+    }
+
+    public void setVelocityMultiplier(double multiplier) {
+        velocityMultiplier = multiplier;
+    }
+
+    public PIDCoefficients getPIDCoefficients() {
+        return pidController.getCoefficients();
+    }
+
+    public void setPIDCoefficients(PIDCoefficients coefficients) {
+        pidController.setCoefficients(coefficients);
+    }
+
+    public void setPIDCoefficients(double kP, double kI, double kD) {
+        pidController.setCoefficients(kP, kI, kD);
     }
 
     public double getVelocity() {

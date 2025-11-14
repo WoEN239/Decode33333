@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.core.device.Device;
+import org.firstinspires.ftc.teamcode.core.device.motor.Motor;
 import org.firstinspires.ftc.teamcode.core.device.trait.Encoder;
 
 
@@ -24,8 +25,6 @@ public class Odometer extends Device implements Encoder {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
-
-        device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -35,12 +34,12 @@ public class Odometer extends Device implements Encoder {
 
     @Override
     public int getEncoderPosition() {
-        return device.getCurrentPosition();
+        return device.getCurrentPosition() * Motor.getDirectionSign(getDirection());
     }
 
     @Override
     public double getEncoderVelocity() {
-        return device.getVelocity();
+        return device.getVelocity() * Motor.getDirectionSign(getDirection());
     }
 
     @Override

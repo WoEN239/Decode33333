@@ -15,7 +15,15 @@ public abstract class Device implements Initializable {
         this.name = name;
     }
 
+    protected Device() {
+        this(null);
+    }
+
     public final String getName() {
         return name;
+    }
+
+    public boolean hasName() {
+        return name != null;
     }
 }

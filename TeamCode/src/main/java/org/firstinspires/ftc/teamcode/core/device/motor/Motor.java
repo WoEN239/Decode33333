@@ -97,4 +97,8 @@ public class Motor extends Device implements Directional {
         if (power > 1) return 1;
         return power;
     }
+
+    public static int getDirectionSign(Direction direction) {
+        return direction == Direction.FORWARD ? 1 : -1;
+    }
 }
