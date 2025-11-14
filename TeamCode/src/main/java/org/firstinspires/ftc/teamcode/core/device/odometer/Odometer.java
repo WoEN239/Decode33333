@@ -24,8 +24,6 @@ public class Odometer extends Device implements Encoder {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
-
-        device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
     @Override
@@ -45,8 +43,7 @@ public class Odometer extends Device implements Encoder {
 
     @Override
     public void resetEncoder() {
-        device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        device.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        return;
     }
 
     @Override
