@@ -22,8 +22,8 @@ public class Gyro implements Initializable {
 
     private Gyro() {
         // default directions
-        this.logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.UP;
-        this.usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.FORWARD;
+        this.logoDirection = RevHubOrientationOnRobot.LogoFacingDirection.LEFT;
+        this.usbDirection = RevHubOrientationOnRobot.UsbFacingDirection.UP;
     }
 
     public static synchronized Gyro getInstance() {
@@ -71,7 +71,7 @@ public class Gyro implements Initializable {
     public double getYaw() {
         checkInitialized();
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        return orientation.getYaw(AngleUnit.DEGREES);
+        return -orientation.getYaw(AngleUnit.DEGREES);
     }
 
     public void resetYaw() {
