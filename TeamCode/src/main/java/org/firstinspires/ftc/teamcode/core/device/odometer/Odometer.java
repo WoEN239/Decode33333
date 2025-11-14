@@ -1,7 +1,5 @@
 package org.firstinspires.ftc.teamcode.core.device.odometer;
 
-
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple.Direction;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -43,7 +41,6 @@ public class Odometer extends Device implements Encoder {
 
     @Override
     public void resetEncoder() {
-        return;
     }
 
     @Override
