@@ -12,14 +12,16 @@ public class Gyro implements Initializable {
     private static Gyro instance;
 
     // 180 / pi
-    public static final double RAD_TO_DEG = 57.295779513082320876798154814105170332405472466564;
+    public static final double radToDeg = 57.295779513082320876798154814105170332405472466564;
     // pi / 180
-    public static final double DEG_TO_RAD = 0.0174532925199432957692369076848861271344287188854;
+    public static final double degToRad = 0.0174532925199432957692369076848861271344287188854;
 
     private IMU imu;
     private boolean initialized = false;
     private RevHubOrientationOnRobot.LogoFacingDirection logoDirection;
     private RevHubOrientationOnRobot.UsbFacingDirection usbDirection;
+    private int rotations = 0;
+    private double oldYaw = 0;
 
     private Gyro() {
         // default directions
@@ -72,11 +74,21 @@ public class Gyro implements Initializable {
     public double getYaw() {
         checkInitialized();
         YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-        return -orientation.getYaw(AngleUnit.DEGREES);
+        double yaw = -orientation.getYaw(AngleUnit.DEGREES);
+        if(yaw - oldYaw > 270) {
+            rotations -= 1;
+        }
+        if(oldYaw - yaw > 270) {
+            rotations += 1;
+        }
+        oldYaw = yaw;
+        return rotations * 360.0 + yaw;
     }
 
     public void resetYaw() {
         checkInitialized();
+        rotations = 0;
+        oldYaw = 0;
         imu.resetYaw();
     }
 
