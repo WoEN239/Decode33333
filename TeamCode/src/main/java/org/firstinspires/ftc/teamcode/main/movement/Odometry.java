@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.config.Config;
 import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
 
 
-// Untested
 // coding by Timofei
 
 @Config
@@ -14,12 +13,13 @@ public class Odometry {
     private final Vehicles vehicles = Vehicles.getInstance();
     private final Gyro gyro = Gyro.getInstance();
     public double ticksX, ticksY, yaw;
-    public static double ticksPerCm = 1;
+    private double oldXOd, oldYOd;
+    public static double ticksPerCm = 543.6;
     private boolean started = false;
 
     // Сколько лишних тиков набегает при полном обороте робота на месте
-    public static double ticksPerRotX = 0;
-    public static double ticksPerRotY = 0;
+    public static double ticksPerRotX = -50580.434823117714;
+    public static double ticksPerRotY = -38074.287148693176;
 
 
     public static Odometry getInstance() {
@@ -39,8 +39,8 @@ public class Odometry {
     public void odometryTick() {
         if(!started) {
             yaw = gyro.getYaw();
-            ticksX = vehicles.getPositionOdometerX();
-            ticksY = vehicles.getPositionOdometerY();
+            oldXOd = vehicles.getPositionOdometerX();
+            oldYOd = vehicles.getPositionOdometerY();
             started = true;
             return;
         }
@@ -48,7 +48,7 @@ public class Odometry {
         double newTicksY = vehicles.getPositionOdometerY();
         double newYaw = gyro.getYaw();
 
-        double dX = newTicksX - ticksX, dY = newTicksY - ticksY, dYaw = newYaw - yaw;
+        double dX = newTicksX - oldXOd, dY = newTicksY - oldYOd, dYaw = newYaw - yaw;
         dX -= ticksPerRotX * dYaw / 360;
         dY -= ticksPerRotY * dYaw / 360;
         double[] deltaPos = rotateVector(dX, dY, newYaw * Gyro.DEG_TO_RAD);
@@ -56,13 +56,16 @@ public class Odometry {
         ticksX += deltaPos[0];
         ticksY += deltaPos[1];
         yaw = newYaw;
+
+        oldXOd = newTicksX;
+        oldYOd = newTicksY;
     }
 
-    double getX() {
+    public double getX() {
         return ticksX / ticksPerCm;
     }
 
-    double getY() {
+    public double getY() {
         return ticksY / ticksPerCm;
     }
 
