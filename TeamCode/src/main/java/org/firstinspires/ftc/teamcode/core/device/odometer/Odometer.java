@@ -10,6 +10,7 @@ import org.firstinspires.ftc.teamcode.core.device.trait.Encoder;
 
 public class Odometer extends Device implements Encoder {
     protected DcMotorEx device;
+    private int offset;
 
 
     public Odometer(String name) {
@@ -22,6 +23,8 @@ public class Odometer extends Device implements Encoder {
         if (isInitialized()) return;
 
         device = hardwareMap.get(DcMotorEx.class, name);
+
+        offset = device.getCurrentPosition();
     }
 
     @Override
@@ -31,7 +34,7 @@ public class Odometer extends Device implements Encoder {
 
     @Override
     public int getEncoderPosition() {
-        return device.getCurrentPosition();
+        return device.getCurrentPosition() - offset;
     }
 
     @Override
