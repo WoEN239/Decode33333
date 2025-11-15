@@ -59,7 +59,7 @@ public class OdometryCalibrateA extends OpMode
             FtcDashboard.getInstance().getTelemetry().addData("TicksPerRotX:",
                     (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
             FtcDashboard.getInstance().getTelemetry().addData("TicksPerRotY:",
-                    (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerY) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
+                    (Vehicles.getInstance().getPositionOdometerY() - zeroOdometerY) / (Gyro.getInstance().getYaw() - zeroYaw) * 360);
             FtcDashboard.getInstance().getTelemetry().update();
         }
         Vehicles.getInstance().moveToDirection(0, 0, gamepad1.right_stick_x);
