@@ -14,9 +14,9 @@ public class TransferBall implements Initializable {
     private final Motor motorFlow;
     private final Motor motorBrush;
     private final Servomotor servoToGun;
-    public static double velocityFlow = 0.7;
-    public static double velocityBrush = 0.9;
-    public static double degreeServo = 0.1;
+    public static double velocityFlow = 0.9;
+    public static double velocityBrush = 1.0;
+    public static double degreeServo = 0.5;
 
     public TransferBall() {
         motorFlow = new Motor("motor_flow");
@@ -24,9 +24,7 @@ public class TransferBall implements Initializable {
         servoToGun = new Servomotor("servo_to_gun");
     }
 
-    public static org.firstinspires.ftc.teamcode.main.modules.TransferBall getInstance() {
-        return INSTANCE;
-    }
+    public static org.firstinspires.ftc.teamcode.main.modules.TransferBall getInstance() { return INSTANCE; }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
@@ -37,9 +35,7 @@ public class TransferBall implements Initializable {
     }
 
     @Override
-    public boolean isInitialized() {
-        return motorFlow.isInitialized() && servoToGun.isInitialized();
-    }
+    public boolean isInitialized() { return motorFlow.isInitialized() && servoToGun.isInitialized(); }
 
     public void setVelocityFlow(double velocity) { velocityFlow = velocity; }
 
@@ -51,10 +47,6 @@ public class TransferBall implements Initializable {
 
     public void setDegreeServo(double degree) {
         degreeServo = degree;
-        servoToGun.setServoPosition(degreeServo);
-    }
-
-    public void kickBall() {
         servoToGun.setServoPosition(degreeServo);
     }
 

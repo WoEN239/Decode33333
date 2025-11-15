@@ -21,9 +21,7 @@ public class SensorVoltage extends Device {
         voltageSensor = null;
     }
 
-    public static org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage getInstance() {
-        return INSTANCE;
-    }
+    public static org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage getInstance() { return INSTANCE; }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {

@@ -21,6 +21,10 @@ import org.firstinspires.ftc.teamcode.main.opencv.Vision;
 
 // coding by Matvey Ivanovv
 
+/*
+    EDGE - ПОБЕДА!
+ */
+
 @TeleOp(name="TeleOp", group="Dev")
 public class BasicMovement extends OpMode
 {
@@ -31,6 +35,8 @@ public class BasicMovement extends OpMode
     private Vision vision;
     public static double degreeGunTower = 0;
     public boolean stateFlow = false;
+    private int countBall = 0;
+    private double kDrive = 1.0;
 
     /*
      * Code to run ONCE when the driver hits INIT
@@ -74,30 +80,40 @@ public class BasicMovement extends OpMode
         FtcDashboard.getInstance().getTelemetry().addData("OdometerY:", Vehicles.getInstance().getPositionOdometerY());
         FtcDashboard.getInstance().getTelemetry().update();
 
-        Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y,
-                gamepad1.left_stick_x,
-                gamepad1.right_stick_x);
+        Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y * kDrive,
+                gamepad1.left_stick_x * kDrive,
+                (gamepad1.right_stick_x - 0.2) * kDrive);
 
         GunControl.getInstance().startShot();
         TransferBall.getInstance().startBrush();
 
-        if (gamepad1.left_bumper) {
-            degreeGunTower += 0.05;
-            GunControl.getInstance().setTowerDegree(degreeGunTower);
-        } else if (gamepad1.right_bumper){
-            degreeGunTower -= 0.05;
-            GunControl.getInstance().setTowerDegree(degreeGunTower);
-        }
-        GunControl.getInstance().setTowerDegree(GunControl.getInstance().getTowerDegree());
+//        if (gamepad1.left_bumper) {
+//            degreeGunTower += 0.05;
+//            GunControl.getInstance().setTowerDegree(degreeGunTower);
+//        } else if (gamepad1.right_bumper){
+//            degreeGunTower -= 0.05;
+//            GunControl.getInstance().setTowerDegree(degreeGunTower);
+//        }
+//        GunControl.getInstance().setTowerDegree(GunControl.getInstance().getTowerDegree());
 
         if (gamepad1.square) {
-            TransferBall.getInstance().setDegreeServo(TransferBall.getInstance().getDegreeServo() - 0.5);
+            TransferBall.getInstance().setDegreeServo(0.0);
         } else {
-            TransferBall.getInstance().setDegreeServo(TransferBall.getInstance().getDegreeServo());
+            TransferBall.getInstance().setDegreeServo(0.5);
+        }
+        if (gamepad1.left_bumper) {
+            kDrive = 0.3;
+        }  else {
+            kDrive = 1;
         }
 
         if (gamepad1.circle) {
             TransferBall.getInstance().startFlow();
+        } else {
+            TransferBall.getInstance().stopFlow();
+        }
+        if (gamepad1.right_bumper) {
+            autoGunBall(800, 950);
         } else {
             TransferBall.getInstance().stopFlow();
         }
@@ -116,4 +132,137 @@ public class BasicMovement extends OpMode
 //        Vision.getInstance().stopStreaming();
     }
 
+    private void autoGunBall(double time, int drawdown) {
+        while (countBall < 2) {
+            GunControl.getInstance().startShot();
+            TransferBall.getInstance().startFlow();
+
+            if (GunControl.getInstance().getSpeedGun() < -860) {
+                runtime.reset();
+                while (runtime.milliseconds() < 600) {
+                    GunControl.getInstance().startShot();
+                    TransferBall.getInstance().startFlow();
+                }
+                countBall++;
+                FtcDashboard.getInstance().getTelemetry().addData("GunSpeed", GunControl.getInstance().getSpeedGun());
+                FtcDashboard.getInstance().getTelemetry().addData("Count Ball", countBall);
+                FtcDashboard.getInstance().getTelemetry().update();
+            }
+        }
+
+        if (countBall == 2) {
+            TransferBall.getInstance().setDegreeServo(0.0);
+        }
+    }
+
 }
+//
+//@TeleOp(name="Basic gamepad", group="Dev")
+//public class BasicMovement extends OpMode
+//{
+//    // Declare OpMode members.
+//    private final ElapsedTime runtime = new ElapsedTime();
+//    IntegratingGyroscope gyro;
+//    IMU imu;
+//    private GunControl gun;
+//    private TransferBall transfer;
+//    public double degreeGunTower;
+//    public boolean stateFlow = false;
+//    public boolean stateGun = false;
+//    public double velocityGun = 0.6;
+//
+//    /*
+//     * Code to run ONCE when the driver hits INIT
+//     */
+//    @Override
+//    public void init() {
+//        Vehicles.getInstance().initialize(hardwareMap);
+//        TransferBall.getInstance().initialize(hardwareMap);
+//        GunControl.getInstance().initialize(hardwareMap);
+//        telemetry.addData("Status", "Initialized");
+//    }
+//
+//    /*
+//     * Code to run REPEATEDLY after the driver hits INIT, but before they hit START
+//     */
+//    @Override
+//    public void init_loop() {
+//    }
+//
+//    /*
+//     * Code to run ONCE when the driver hits START
+//     */
+//    @Override
+//    public void start() {
+//        runtime.reset();
+//    }
+//
+//    /*
+//     * Code to run REPEATEDLY after the driver hits START but before they hit STOP
+//     */
+//    @Override
+//    public void loop() {
+//        FtcDashboard.getInstance().getTelemetry().addData("Velocity Gun:", GunControl.getInstance().getVelocity());
+//        FtcDashboard.getInstance().getTelemetry().update();
+//        if (gamepad1.triangle) { stateFlow = true; }
+//        if (gamepad1.circle) { stateFlow = false; }
+//        if (gamepad1.dpad_up) { stateGun = true; }
+//        if (gamepad1.dpad_down) { stateGun = false; }
+//        telemetry.addData("Status", "Run Time: " + runtime.toString());
+//        telemetry.addData("GPX", gamepad1.left_stick_x);
+//        telemetry.addData("GPY", -gamepad1.left_stick_y);
+//        telemetry.update();
+//        Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y,
+//                gamepad1.left_stick_x,
+//                gamepad1.right_stick_x);
+//        TransferBall.getInstance().startBrush();
+//        GunControl.getInstance().startShot();
+//        if (stateGun) {
+//            GunControl.getInstance().startShot();
+//        } else { GunControl.getInstance().stopShot(); }
+//        if (gamepad1.left_bumper) {
+//            degreeGunTower += 0.05;
+//            GunControl.getInstance().setTowerDegree(degreeGunTower);
+//        } else if (gamepad1.right_bumper){
+//            degreeGunTower -= 0.05;
+//            GunControl.getInstance().setTowerDegree(degreeGunTower);
+//        }
+//        if (gamepad1.square) {
+//            TransferBall.getInstance().setDegreeServo(0.0);
+//        } else {
+//            TransferBall.getInstance().setDegreeServo(0.5);
+//        }
+//        if (gamepad1.circle) {
+//            TransferBall.getInstance().startFlow();
+//        } else {
+//            TransferBall.getInstance().stopFlow();
+//        }
+//
+//       /* if (gamepad1.dpad_left) {
+//            velocityGun += 0.05;
+//            if (velocityGun > 1) velocityGun = 1;
+//            GunControl.getInstance().setVelocity(velocityGun);
+//        } else if (gamepad1.dpad_right) {
+//            velocityGun -= 0.05;
+//            if (velocityGun < 0) velocityGun = 0;
+//            GunControl.getInstance().setVelocity(velocityGun);
+//        }
+//
+//        */
+//
+//
+//    }
+//
+//    /*
+//     * Code to run ONCE after the driver hits STOP
+//     */
+//    @Override
+//    public void stop() {
+//        Vehicles.getInstance().moveToDirection(0, 0, 0);
+//        GunControl.getInstance().stopShot();
+//        TransferBall.getInstance().stopBrush();
+//        TransferBall.getInstance().stopFlow();
+//        GunControl.getInstance().stopShot();
+//    }
+//
+//}

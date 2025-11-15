@@ -20,14 +20,15 @@ public class Autonomus extends LinearOpMode {
     public AprilTag aprilTag;
     private GunControl gun;
     private TransferBall transfer;
+    private int countBall = 0;
 
     double drive;
     double turn;
     double strafe;
 
-    public static double kpForward = 0.01;
-    public static double kpHorizontal = 0.01;
-    public static double kpTurn = 0.01;
+    public static double kpForward = 0.1;
+    public static double kpHorizontal = 0.1;
+    public static double kpTurn = 0.1;
     public static double deadZone = 2.0;
     public static double smoothingFactor = 0.3;
 
@@ -48,38 +49,87 @@ public class Autonomus extends LinearOpMode {
         waitForStart();
 
         if (opModeIsActive()) {
+            AprilTag.getInstance().resetApril();
+            FtcDashboard.getInstance().getTelemetry().addData("AprilY", AprilTag.getInstance().getPosAprilY());
+            FtcDashboard.getInstance().getTelemetry().update();
             while (opModeIsActive()) {
-                GunControl.getInstance().startShot();
-                AprilTag.getInstance().telemetryAprilTag();
-                TransferBall.getInstance().startFlow();
-                calculateRegulatorTag(41.5, -2.5, -0.35);
-
-                Vehicles.getInstance().moveToDirection(drive, strafe, turn);
-
+                FtcDashboard.getInstance().getTelemetry().addData("Start", AprilTag.getInstance().getPosAprilY());
                 FtcDashboard.getInstance().getTelemetry().update();
-            }
-        }
+                runtime.reset();
+                FtcDashboard.getInstance().getTelemetry().addData("Startt", AprilTag.getInstance().getPosAprilY());
+                FtcDashboard.getInstance().getTelemetry().update();
+                while (runtime.milliseconds() < 500) { FtcDashboard.getInstance().getTelemetry().addData("Time", runtime.milliseconds()); }
+                if (opModeIsActive()) {
+                    while (opModeIsActive() && AprilTag.getInstance().getId() != 24 && AprilTag.getInstance().getPosAprilY() < 30) {
+                        AprilTag.getInstance().telemetryAprilTag();
+                        GunControl.getInstance().startShot();
+                        calculateRegulatorTag(-0.4, 41.7, 4.5, -2.5);
+//                    Vehicles.getInstance().moveToDirection(-0.2, 0.3, 0);
+                        FtcDashboard.getInstance().getTelemetry().addData("Is target position", isInTargetPosition(30));
+                        FtcDashboard.getInstance().getTelemetry().update();
+                    }
+                }
+                FtcDashboard.getInstance().getTelemetry().addData("To position", true);
+                FtcDashboard.getInstance().getTelemetry().addData("AprilY", AprilTag.getInstance().getPosAprilY());
+                FtcDashboard.getInstance().getTelemetry().update();
+                Vehicles.getInstance().moveToDirection(0.0, 0.0, 0.0);
 
+                while (AprilTag.getInstance().getPosAprilY() >= 30 && opModeIsActive() && countBall < 2) {
+                    GunControl.getInstance().startShot();
+                    TransferBall.getInstance().startFlow();
+
+                    if (GunControl.getInstance().getSpeedGun() < -860) {
+                        runtime.reset();
+                        while (opModeIsActive() && runtime.milliseconds() < 1200) {
+                            GunControl.getInstance().startShot();
+                            TransferBall.getInstance().startFlow();
+                        }
+                        countBall++;
+                        FtcDashboard.getInstance().getTelemetry().addData("GunSpeed", GunControl.getInstance().getSpeedGun());
+                        FtcDashboard.getInstance().getTelemetry().addData("Count Ball", countBall);
+                        FtcDashboard.getInstance().getTelemetry().update();
+                    }
+                }
+
+                if (countBall == 2) {
+                    TransferBall.getInstance().setDegreeServo(0.0);
+                }
+
+
+            }
+            GunControl.getInstance().stopShot();
+            Vehicles.getInstance().moveToDirection(0.0, 0.0, 0.0);
+            AprilTag.getInstance().visionPortal.close();
+        }
+        GunControl.getInstance().stopShot();
         Vehicles.getInstance().moveToDirection(0.0, 0.0, 0.0);
         AprilTag.getInstance().visionPortal.close();
     }
 
-    public void calculateRegulatorTag(double range, double yaw, double posX) {
-        double rangeError = range - AprilTag.getInstance().getRange();
-        double yawError = yaw - AprilTag.getInstance().getYaw();
-        double xError = posX - AprilTag.getInstance().getPosAprilX();
+    private boolean isInTargetPosition(double targetY) {
+        double yError = Math.abs(targetY - AprilTag.getInstance().getPosAprilY());
 
-//        if (Math.abs(rangeError) < deadZone) rangeError = 0;
-//        if (Math.abs(yawError) < deadZone) yawError = 0;
-//        if (Math.abs(xError) < deadZone) xError = 0;
+        return (yError < deadZone);
+    }
 
-        double rawDrive = rangeError * kpForward;
+    public void calculateRegulatorTag(double targetX, double targetY, double targetZ, double targetYaw) {
+        double xError = targetX - AprilTag.getInstance().getPosAprilX();
+        double yError = targetY - AprilTag.getInstance().getPosAprilY();
+        double zError = targetZ - AprilTag.getInstance().getRange();
+        double yawError = targetYaw - AprilTag.getInstance().getYaw();
+
+        if (Math.abs(xError) < deadZone) xError = 0;
+        if (Math.abs(yError) < deadZone) yError = 0;
+        if (Math.abs(zError) < deadZone) zError = 0;
+        if (Math.abs(yawError) < deadZone) yawError = 0;
+
+        double rawHorizontal = xError * kpHorizontal;
+        double rawForward = yError * kpForward;
         double rawTurn = yawError * kpTurn;
-        double rawStrafe = xError * kpHorizontal;
 
-        drive = smoothingFactor * (rawDrive - prevDrive);
+        drive = smoothingFactor * (rawForward - prevDrive);
         turn = smoothingFactor * (rawTurn - prevTurn);
-        strafe = smoothingFactor * (rawStrafe - prevStrafe);
+        strafe = smoothingFactor * (rawHorizontal - prevStrafe);
 
         prevDrive = drive;
         prevTurn = turn;
@@ -89,9 +139,10 @@ public class Autonomus extends LinearOpMode {
         turn = Math.max(-1, Math.min(turn, 1));
         strafe = Math.max(-1, Math.min(strafe, 1));
 
-        FtcDashboard.getInstance().getTelemetry().addData("Range", AprilTag.getInstance().getRange());
-        FtcDashboard.getInstance().getTelemetry().addData("Yaw", AprilTag.getInstance().getYaw());
         FtcDashboard.getInstance().getTelemetry().addData("X", AprilTag.getInstance().getPosAprilX());
+        FtcDashboard.getInstance().getTelemetry().addData("Y", AprilTag.getInstance().getPosAprilY());
+        FtcDashboard.getInstance().getTelemetry().addData("Z", AprilTag.getInstance().getRange());
+        FtcDashboard.getInstance().getTelemetry().addData("Yaw", AprilTag.getInstance().getYaw());
         FtcDashboard.getInstance().getTelemetry().addData("drive", drive);
         FtcDashboard.getInstance().getTelemetry().addData("turn", turn);
         FtcDashboard.getInstance().getTelemetry().addData("strafe", strafe);
