@@ -12,9 +12,9 @@ import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
 import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 import org.firstinspires.ftc.teamcode.main.opencv.AprilTag;
 
-@Autonomous(name="Autonomus", group="Dev")
+@Autonomous(name="AutonomusRedTower", group="Dev")
 @Config
-public class Autonomus extends LinearOpMode {
+public class AutonomusRed extends LinearOpMode {
 
     public ElapsedTime runtime = new ElapsedTime();
     public AprilTag aprilTag;
