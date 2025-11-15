@@ -15,6 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.core.device.odometer.Odometer;
 import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
+import org.firstinspires.ftc.teamcode.main.movement.Odometry;
 import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 import org.firstinspires.ftc.teamcode.main.modules.GunControl;
 import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
@@ -72,6 +73,11 @@ public class BasicMovement extends OpMode
      */
     @Override
     public void loop() {
+        Odometry.getInstance().odometryTick();
+        FtcDashboard.getInstance().getTelemetry().addData("X Pos:", Odometry.getInstance().getX());
+        FtcDashboard.getInstance().getTelemetry().addData("Y Pos:", Odometry.getInstance().getY());
+
+
         FtcDashboard.getInstance().getTelemetry().addData("Velocity Gun:", GunControl.getInstance().getVelocity());
         FtcDashboard.getInstance().getTelemetry().addData("Velocity Flow:", TransferBall.getInstance().getVelocityFlow());
         FtcDashboard.getInstance().getTelemetry().addData("Velocity Brush:", TransferBall.getInstance().getVelocityBrush());
