@@ -4,12 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
-import org.firstinspires.ftc.teamcode.main.modules.GunControl;
-import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
 import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
-import org.firstinspires.ftc.teamcode.main.opencv.Vision;
 
 // coding by Timofei
 
@@ -18,11 +14,6 @@ public class OdometryCalibrateB extends OpMode
 {
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
-    private GunControl gun;
-    private TransferBall transfer;
-    private Vision vision;
-    public static double degreeGunTower = 0;
-    public boolean stateFlow = false;
     private double zeroOdometerX, zeroOdometerY, zeroYaw;
 
     /*
@@ -31,13 +22,8 @@ public class OdometryCalibrateB extends OpMode
     @Override
     public void init() {
         Vehicles.getInstance().initialize(hardwareMap);
-        TransferBall.getInstance().initialize(hardwareMap);
-        GunControl.getInstance().initialize(hardwareMap);
         Gyro.getInstance().initialize(hardwareMap);
         if (Vehicles.getInstance().isInitialized() &&
-                TransferBall.getInstance().isInitialized() &&
-                GunControl.getInstance().isInitialized() &&
-                Vision.getInstance().isInitialized() &&
                 Gyro.getInstance().isInitialized())
         { telemetry.addData("Status", "Initialized"); }
     }
@@ -58,6 +44,7 @@ public class OdometryCalibrateB extends OpMode
         zeroOdometerY = Vehicles.getInstance().getPositionOdometerY();
         zeroYaw = Gyro.getInstance().getYaw();
         runtime.reset();
+        FtcDashboard.getInstance().getTelemetry().addLine("Move the robot 45 centimeters (robot's width) right and check the TicksPerCm value");
     }
 
     /*
@@ -80,11 +67,6 @@ public class OdometryCalibrateB extends OpMode
     @Override
     public void stop() {
         Vehicles.getInstance().moveToDirection(0, 0, 0);
-        GunControl.getInstance().stopShot();
-        TransferBall.getInstance().stopBrush();
-        TransferBall.getInstance().stopFlow();
-        GunControl.getInstance().stopShot();
-//        Vision.getInstance().stopStreaming();
     }
 
 }

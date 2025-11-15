@@ -7,13 +7,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
 
 
+// coding by Timofei
 public class Gyro implements Initializable {
     private static Gyro instance;
 
     // 180 / pi
-    public static final double radToDeg = 57.295779513082320876798154814105170332405472466564;
+    public static final double RAD_TO_DEG = 57.295779513082320876798154814105170332405472466564;
     // pi / 180
-    public static final double degToRad = 0.0174532925199432957692369076848861271344287188854;
+    public static final double DEG_TO_RAD = 0.0174532925199432957692369076848861271344287188854;
 
     private IMU imu;
     private boolean initialized = false;

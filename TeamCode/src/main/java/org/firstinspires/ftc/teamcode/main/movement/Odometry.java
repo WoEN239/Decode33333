@@ -1,13 +1,12 @@
 package org.firstinspires.ftc.teamcode.main.movement;
 import androidx.annotation.NonNull;
-
 import com.acmerobotics.dashboard.config.Config;
-import org.firstinspires.ftc.teamcode.core.device.odometer.Odometer;
 import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
-import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
 
 
-// Unfinished
+// Untested
+// coding by Timofei
+
 @Config
 public class Odometry {
     private static final Odometry instance = new Odometry();
@@ -52,7 +51,7 @@ public class Odometry {
         double dX = newTicksX - ticksX, dY = newTicksY - ticksY, dYaw = newYaw - yaw;
         dX -= ticksPerRotX * dYaw / 360;
         dY -= ticksPerRotY * dYaw / 360;
-        double[] deltaPos = rotateVector(dX, dY, newYaw * Gyro.degToRad);
+        double[] deltaPos = rotateVector(dX, dY, newYaw * Gyro.DEG_TO_RAD);
 
         ticksX += deltaPos[0];
         ticksY += deltaPos[1];
