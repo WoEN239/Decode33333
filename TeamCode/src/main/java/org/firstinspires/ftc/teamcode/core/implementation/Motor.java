@@ -5,22 +5,20 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.core.trait.device.IEncoder;
+import org.firstinspires.ftc.teamcode.core.trait.device.IMotor;
 
 
-public final class Odometer implements IEncoder {
+public class Motor implements IMotor {
     private final String name;
     private DcMotorEx device;
-    private int offset;
     private Direction direction;
 
 
-    public Odometer(String name) {
+    public Motor(String name) {
         assert name != null;
 
         this.name = name;
         device = null;
-        offset = 0;
         direction = Direction.FORWARD;
     }
 
@@ -32,14 +30,7 @@ public final class Odometer implements IEncoder {
 
         device = hardwareMap.get(DcMotorEx.class, name);
         device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
-        /*
-         * We shouldn't multiply current position
-         * by direction sign, because in getEncoderPosition
-         * we will firstly subtract offset from raw position/velocity
-         * and then multiply by direction
-         */
-        offset = device.getCurrentPosition();
+        setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior.FLOAT);
     }
 
     @Override
@@ -66,28 +57,15 @@ public final class Odometer implements IEncoder {
     }
 
     @Override
-    public String getName() {
-        return name;
+    public double getPower() {
+        assert isInitialized();
+        return device.getPower() * direction.getSign();
     }
 
     @Override
-    public int getEncoderPosition() {
+    public void setPower(double power) {
         assert isInitialized();
-        return (device.getCurrentPosition() - offset) * direction.getSign();
-    }
-
-    @Override
-    public double getEncoderVelocity() {
-        assert isInitialized();
-        return device.getVelocity() * direction.getSign();
-    }
-
-    @Override
-    public void resetEncoder() {
-        assert isInitialized();
-
-        device.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        device.setPower(IMotor.normalizePower(power) * direction.getSign());
     }
 
     @Override
@@ -99,5 +77,24 @@ public final class Odometer implements IEncoder {
     public void setDirection(Direction direction) {
         assert direction != null;
         this.direction = direction;
+    }
+
+    @Override
+    public DcMotor.ZeroPowerBehavior getZeroPowerBehaviour() {
+        assert isInitialized();
+        return device.getZeroPowerBehavior();
+    }
+
+    @Override
+    public void setZeroPowerBehaviour(DcMotor.ZeroPowerBehavior behaviour) {
+        assert isInitialized();
+        assert behaviour != null;
+
+        device.setZeroPowerBehavior(behaviour);
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }
