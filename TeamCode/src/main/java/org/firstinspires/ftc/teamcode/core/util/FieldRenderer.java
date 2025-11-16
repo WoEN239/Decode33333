@@ -63,7 +63,7 @@ public final class FieldRenderer {
         renderRobot(
                 Odometry.getInstance().getX(),
                 Odometry.getInstance().getY(),
-                Gyro.getInstance().getYaw()
+                Odometry.getInstance().getYaw()
         );
     }
 }

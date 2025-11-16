@@ -16,6 +16,7 @@ public class Odometry {
     private double oldXOd, oldYOd;
     public static double ticksPerCm = 543.6;
     private boolean started = false;
+    private double yawOffset = 0;
 
     // Сколько лишних тиков набегает при полном обороте робота на месте
     public static double ticksPerRotX = -50580.434823117714;
@@ -36,6 +37,19 @@ public class Odometry {
         return new double[]{cos * x + sin * y, cos * y - sin * x};
     }
 
+    public void setPosition(double x, double y) {
+        ticksX = x;
+        ticksY = y;
+    }
+
+    public void setPositionCm(double x, double y) {
+        setPosition(x * ticksPerCm, y * ticksPerCm);
+    }
+
+    public void setYaw(double yaw) {
+        yawOffset = yaw - this.yaw;
+    }
+
     public void odometryTick() {
         if(!started) {
             yaw = gyro.getYaw();
@@ -51,7 +65,7 @@ public class Odometry {
         double dX = newTicksX - oldXOd, dY = newTicksY - oldYOd, dYaw = newYaw - yaw;
         dX -= ticksPerRotX * dYaw / 360;
         dY -= ticksPerRotY * dYaw / 360;
-        double[] deltaPos = rotateVector(dX, dY, newYaw * Gyro.DEG_TO_RAD);
+        double[] deltaPos = rotateVector(dX, dY, (newYaw + yawOffset) * Gyro.DEG_TO_RAD);
 
         ticksX += deltaPos[0];
         ticksY += deltaPos[1];
@@ -67,6 +81,10 @@ public class Odometry {
 
     public double getY() {
         return ticksY / ticksPerCm;
+    }
+
+    public double getYaw() {
+        return yaw + yawOffset;
     }
 
 }
