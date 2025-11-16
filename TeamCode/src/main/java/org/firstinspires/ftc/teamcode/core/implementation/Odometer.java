@@ -33,7 +33,13 @@ public final class Odometer implements IEncoder {
         device = hardwareMap.get(DcMotorEx.class, name);
         device.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        offset = device.getCurrentPosition() * direction.getSign();
+        /*
+         * We shouldn't multiply current position
+         * by direction sign, because in getEncoderPosition
+         * we will firstly subtract offset from raw position/velocity
+         * and then multiply by direction
+         */
+        offset = device.getCurrentPosition();
     }
 
     @Override
@@ -73,7 +79,7 @@ public final class Odometer implements IEncoder {
     @Override
     public double getEncoderVelocity() {
         assert isInitialized();
-        return (device.getVelocity() - offset) * getDirection().getSign();
+        return device.getVelocity() * getDirection().getSign();
     }
 
     @Override
