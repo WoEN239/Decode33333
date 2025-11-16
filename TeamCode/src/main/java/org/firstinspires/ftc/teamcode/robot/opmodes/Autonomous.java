@@ -10,7 +10,7 @@ import org.firstinspires.ftc.teamcode.core.util.exception.UnimplementedException
  * Autonomous-period program logic of the robot
  */
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(
-        name="Autonomous",
+        name = "Autonomous",
         group = "Dev"
 )
 public final class Autonomous extends OpMode {
