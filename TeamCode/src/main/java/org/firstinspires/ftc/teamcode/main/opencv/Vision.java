@@ -38,9 +38,7 @@ public class Vision implements Initializable {
     public Telemetry telemetry;
     private boolean isInitialized = false;
 
-    public static org.firstinspires.ftc.teamcode.main.opencv.Vision getInstance() {
-        return INSTANCE;
-    }
+    public static org.firstinspires.ftc.teamcode.main.opencv.Vision getInstance() { return INSTANCE; }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
