@@ -1,10 +1,21 @@
+/**
+ * @author Arsen Berezin
+ */
+
 package org.firstinspires.ftc.teamcode.core.trait.device;
 
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 
-public interface IDirectional {
+/**
+ * Interface describing devices that has a direction.
+ *
+ * @see IDevice
+ *
+ * @see org.firstinspires.ftc.teamcode.core.implementation
+ */
+public interface IDirectional extends IDevice {
     enum Direction {
         FORWARD(1),
         BACKWARD(-1);
@@ -30,8 +41,7 @@ public interface IDirectional {
         }
 
         public static Direction fromRaw(DcMotorSimple.Direction direction) {
-            return direction == DcMotorSimple.Direction.FORWARD
-                    ? FORWARD : BACKWARD;
+            return direction == DcMotorSimple.Direction.FORWARD ? FORWARD : BACKWARD;
         }
     }
 
