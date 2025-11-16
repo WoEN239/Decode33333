@@ -7,10 +7,9 @@ import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
 // coding by Timofei
 
 @Config
-public class Odometry {
+public final class Odometry {
     private static final Odometry instance = new Odometry();
 
-    private final Vehicles vehicles = Vehicles.getInstance();
     private final Gyro gyro = Gyro.getInstance();
     public double ticksX, ticksY, yaw;
     private double oldXOd, oldYOd;
@@ -53,13 +52,13 @@ public class Odometry {
     public void odometryTick() {
         if(!started) {
             yaw = gyro.getYaw();
-            oldXOd = vehicles.getPositionOdometerX();
-            oldYOd = vehicles.getPositionOdometerY();
+            oldXOd = Vehicles.getInstance().getPositionOdometerX();
+            oldYOd = Vehicles.getInstance().getPositionOdometerY();
             started = true;
             return;
         }
-        double newTicksX = vehicles.getPositionOdometerX();
-        double newTicksY = vehicles.getPositionOdometerY();
+        double newTicksX = Vehicles.getInstance().getPositionOdometerX();
+        double newTicksY = Vehicles.getInstance().getPositionOdometerY();
         double newYaw = gyro.getYaw();
 
         double dX = newTicksX - oldXOd, dY = newTicksY - oldYOd, dYaw = newYaw - yaw;
