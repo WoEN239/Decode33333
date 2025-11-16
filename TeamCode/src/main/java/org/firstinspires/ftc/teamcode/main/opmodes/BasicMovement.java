@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
+import org.firstinspires.ftc.teamcode.core.util.FieldRenderer;
 import org.firstinspires.ftc.teamcode.main.movement.Odometry;
 import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 import org.firstinspires.ftc.teamcode.main.modules.GunControl;
@@ -82,6 +83,7 @@ public class BasicMovement extends OpMode
         FtcDashboard.getInstance().getTelemetry().addData("OdometerX:", Vehicles.getInstance().getPositionOdometerX());
         FtcDashboard.getInstance().getTelemetry().addData("OdometerY:", Vehicles.getInstance().getPositionOdometerY());
         FtcDashboard.getInstance().getTelemetry().addData("Yaw:", Gyro.getInstance().getYaw());
+        FieldRenderer.renderRobot();
         FtcDashboard.getInstance().getTelemetry().update();
 
         Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y * kDrive,
