@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.core.device.motor.Motor;
 import org.firstinspires.ftc.teamcode.core.device.odometer.Odometer;
+import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
+import org.firstinspires.ftc.teamcode.core.util.pid.PIDRegulator;
 
 
 public final class Vehicles implements Initializable {
@@ -18,6 +20,10 @@ public final class Vehicles implements Initializable {
     private final Motor rightFrontMotor;
     private final Motor leftBackMotor;
     private final Motor rightBackMotor;
+
+    private final PIDRegulator xPosPID = new PIDRegulator();
+    private final PIDRegulator yPosPID = new PIDRegulator();
+    private final PIDRegulator yawPosPID = new PIDRegulator();
 
 
     private Vehicles() {
@@ -112,6 +118,28 @@ public final class Vehicles implements Initializable {
         leftBackMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightBackMotor.setPower(backRightPower);
+    }
+
+    // coding by Timofei
+    private void goTo(double x, double y, double yaw, boolean posReg, boolean yawReg) {
+        double xSpd = 0, ySpd = 0, yawSpd = 0;
+
+        if(posReg) {
+            double xErr = x - Odometry.getInstance().getX();
+            double yErr = y - Odometry.getInstance().getY();
+            double[] errVector = Odometry.rotateVector(xErr, yErr, -Odometry.getInstance().getYaw());
+            xErr = errVector[0];
+            yErr = errVector[1];
+            xSpd = xPosPID.PIDGet(-xErr);
+            ySpd = yPosPID.PIDGet(-yErr);
+        }
+
+        if(yawReg) {
+            double yawErr = Gyro.getShortestPathToAngle(Odometry.getInstance().getYaw(), yaw);
+            yawSpd = yawPosPID.PIDGet(-yawErr);
+        }
+
+        moveToDirectionNorm(xSpd, ySpd, yawSpd);
     }
 
     public double getPositionOdometerX() {
