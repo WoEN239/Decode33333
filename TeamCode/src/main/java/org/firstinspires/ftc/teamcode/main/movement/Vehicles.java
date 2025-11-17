@@ -142,6 +142,18 @@ public final class Vehicles implements Initializable {
         moveToDirectionNorm(xSpd, ySpd, yawSpd);
     }
 
+    public void goTo(double x, double y) {
+        goTo(x, y, 0, true, false);
+    }
+
+    public void goTo(double x, double y, double yaw) {
+        goTo(x, y, yaw, true, true);
+    }
+
+    public void rotateTo(double yaw) {
+        goTo(0, 0, yaw, false, true);
+    }
+
     public double getPositionOdometerX() {
         return odometerX.getEncoderPosition();
     }
