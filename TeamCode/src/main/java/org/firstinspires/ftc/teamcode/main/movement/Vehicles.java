@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.main.movement;
 
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.core.device.motor.Motor;
@@ -73,6 +74,39 @@ public final class Vehicles implements Initializable {
         double frontRightPower = Motor.normalizePower(forward - horizontal - turn);
         double backLeftPower = Motor.normalizePower(forward - horizontal + turn);
         double backRightPower = Motor.normalizePower(forward + horizontal - turn);
+
+        leftFrontMotor.setPower(frontLeftPower);
+        leftBackMotor.setPower(backLeftPower);
+        rightFrontMotor.setPower(frontRightPower);
+        rightBackMotor.setPower(backRightPower);
+    }
+
+    public void moveToDirectionNorm(double forward, double horizontal, double turn) {
+        double deadZone = 0.1;
+        if (Math.abs(forward) < deadZone) forward = 0;
+        if (Math.abs(horizontal) < deadZone) horizontal = 0;
+        if (Math.abs(turn) < deadZone) turn = 0;
+
+        double frontLeftPower = forward + horizontal + turn;
+        double frontRightPower = forward - horizontal - turn;
+        double backLeftPower = forward - horizontal + turn;
+        double backRightPower = forward + horizontal - turn;
+
+        double maxSpd = Math.max(Math.max(
+                Math.abs(frontLeftPower), Math.abs(frontRightPower)
+        ), Math.max(
+                Math.abs(backLeftPower), Math.abs(backRightPower)
+        ));
+
+        if(maxSpd > 1) {
+            FtcDashboard.getInstance().getTelemetry().addData("Max motor speed", 1);
+            frontLeftPower /= maxSpd;
+            frontRightPower /= maxSpd;
+            backLeftPower /= maxSpd;
+            backRightPower /= maxSpd;
+        } else {
+            FtcDashboard.getInstance().getTelemetry().addData("Max motor speed", maxSpd);
+        }
 
         leftFrontMotor.setPower(frontLeftPower);
         leftBackMotor.setPower(backLeftPower);
