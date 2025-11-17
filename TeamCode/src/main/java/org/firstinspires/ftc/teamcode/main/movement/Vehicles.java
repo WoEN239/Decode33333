@@ -81,7 +81,7 @@ public final class Vehicles implements Initializable {
                                    double horizontal,
                                    double turn,
                                    boolean normalize) {
-        double deadZone = 0.1;
+        double deadZone = 0.2;
         if (Math.abs(forward) < deadZone) forward = 0;
         if (Math.abs(horizontal) < deadZone) horizontal = 0;
         if (Math.abs(turn) < deadZone) turn = 0;
@@ -146,7 +146,7 @@ public final class Vehicles implements Initializable {
             yawSpd = yawPosPID.PIDGet(-yawErr);
         }
 
-        return moveToDirection(xSpd, ySpd, yawSpd, true);
+        return moveToDirection(ySpd, xSpd, yawSpd, true);
     }
 
     @SuppressWarnings("UnusedReturnValue")
