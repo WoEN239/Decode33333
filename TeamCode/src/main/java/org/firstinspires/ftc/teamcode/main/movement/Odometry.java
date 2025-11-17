@@ -20,8 +20,8 @@ public final class Odometry {
     private double dY = 0;
 
     // Сколько лишних тиков набегает при полном обороте робота на месте
-    public static double ticksPerRotX = -50580.434823117714;
-    public static double ticksPerRotY = -38074.287148693176;
+    public static double ticksPerRotX = -54234.72927210026;
+    public static double ticksPerRotY = -38918.859674602405;
 
 
     public static Odometry getInstance() {
