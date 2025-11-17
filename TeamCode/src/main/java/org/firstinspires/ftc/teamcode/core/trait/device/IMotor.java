@@ -17,4 +17,8 @@ package org.firstinspires.ftc.teamcode.core.trait.device;
 public interface IMotor extends IDevice, IDirectional {
     double getPower();
     void setPower(double power);
+
+    void enable();
+    void disable();
+    boolean isEnabled();
 }

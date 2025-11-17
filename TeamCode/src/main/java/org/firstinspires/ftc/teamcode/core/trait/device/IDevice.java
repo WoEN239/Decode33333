@@ -22,8 +22,4 @@ public interface IDevice {
 
     void initialize(HardwareMap hardwareMap);
     boolean isInitialized();
-
-    void enable();
-    void disable();
-    boolean isEnabled();
 }

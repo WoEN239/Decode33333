@@ -17,4 +17,8 @@ public interface IEncoder extends IDevice, IDirectional {
     int getEncoderPosition();
     double getEncoderVelocity();
     void resetEncoder();
+
+    void enable();
+    void disable();
+    boolean isEnabled();
 }
