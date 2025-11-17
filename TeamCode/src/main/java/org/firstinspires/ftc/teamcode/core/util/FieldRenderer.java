@@ -51,6 +51,7 @@ public final class FieldRenderer {
                 +halfLength};  // front left
         rotatePoints(xPoints, yPoints, robotYaw);
         shiftPoints(xPoints, yPoints, robotX, robotY);
+        rotatePoints(xPoints, yPoints, 90);
 
         packet.fieldOverlay().setFill("blue");
         packet.fieldOverlay().fillPolygon(xPoints, yPoints);
