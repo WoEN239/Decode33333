@@ -70,11 +70,24 @@ public final class Vehicles implements Initializable {
                 && odometerY.isInitialized();
     }
 
-    public void moveToDirection(double forward, double horizontal, double turn) {
+    public void stopAll() {
+        leftFrontMotor.setPower(0);
+        leftBackMotor.setPower(0);
+        rightFrontMotor.setPower(0);
+        rightBackMotor.setPower(0);
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean moveToDirection(double forward, double horizontal, double turn) {
         double deadZone = 0.1;
         if (Math.abs(forward) < deadZone) forward = 0;
         if (Math.abs(horizontal) < deadZone) horizontal = 0;
         if (Math.abs(turn) < deadZone) turn = 0;
+
+        if(forward == 0 && horizontal == 0 && turn == 0) {
+            stopAll();
+            return false;
+        }
 
         double frontLeftPower = Motor.normalizePower(forward + horizontal + turn);
         double frontRightPower = Motor.normalizePower(forward - horizontal - turn);
@@ -85,13 +98,20 @@ public final class Vehicles implements Initializable {
         leftBackMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightBackMotor.setPower(backRightPower);
+
+        return true;
     }
 
-    public void moveToDirectionNorm(double forward, double horizontal, double turn) {
+    public boolean moveToDirectionNorm(double forward, double horizontal, double turn) {
         double deadZone = 0.1;
         if (Math.abs(forward) < deadZone) forward = 0;
         if (Math.abs(horizontal) < deadZone) horizontal = 0;
         if (Math.abs(turn) < deadZone) turn = 0;
+
+        if(forward == 0 && horizontal == 0 && turn == 0) {
+            stopAll();
+            return false;
+        }
 
         double frontLeftPower = forward + horizontal + turn;
         double frontRightPower = forward - horizontal - turn;
@@ -118,10 +138,12 @@ public final class Vehicles implements Initializable {
         leftBackMotor.setPower(backLeftPower);
         rightFrontMotor.setPower(frontRightPower);
         rightBackMotor.setPower(backRightPower);
+
+        return true;
     }
 
     // coding by Timofei
-    private void goTo(double x, double y, double yaw, boolean posReg, boolean yawReg) {
+    private boolean goTo(double x, double y, double yaw, boolean posReg, boolean yawReg) {
         double xSpd = 0, ySpd = 0, yawSpd = 0;
 
         if(posReg) {
@@ -139,19 +161,22 @@ public final class Vehicles implements Initializable {
             yawSpd = yawPosPID.PIDGet(-yawErr);
         }
 
-        moveToDirectionNorm(xSpd, ySpd, yawSpd);
+        return moveToDirectionNorm(xSpd, ySpd, yawSpd);
     }
 
-    public void goTo(double x, double y) {
-        goTo(x, y, 0, true, false);
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean goTo(double x, double y) {
+        return goTo(x, y, 0, true, false);
     }
 
-    public void goTo(double x, double y, double yaw) {
-        goTo(x, y, yaw, true, true);
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean goTo(double x, double y, double yaw) {
+        return goTo(x, y, yaw, true, true);
     }
 
-    public void rotateTo(double yaw) {
-        goTo(0, 0, yaw, false, true);
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean rotateTo(double yaw) {
+        return goTo(0, 0, yaw, false, true);
     }
 
     public double getPositionOdometerX() {
