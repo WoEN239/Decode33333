@@ -179,6 +179,14 @@ public final class Vehicles implements Initializable {
         return goTo(0, 0, yaw, false, true);
     }
 
+    public void setPosPID(double pX, double iX, double dX,
+                          double pY, double iY, double dY,
+                          double pYaw, double iYaw, double dYaw) {
+        xPosPID.setCoefficients(pX, iX, dX);
+        yPosPID.setCoefficients(pY, iY, dY);
+        yawPosPID.setCoefficients(pYaw, iYaw, dYaw);
+    }
+
     public double getPositionOdometerX() {
         return odometerX.getEncoderPosition();
     }

@@ -16,6 +16,11 @@ import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 public class PosPIDTuner extends OpMode
 {
 
+    public static double pX = 0, iX = 0, dX = 0;
+    public static double pY = 0, iY = 0, dY = 0;
+    public static double pYaw = 0, iYaw = 0, dYaw = 0;
+
+
     /*
      * Code to run ONCE when the driver hits INIT
      */
@@ -48,11 +53,18 @@ public class PosPIDTuner extends OpMode
     @Override
     public void loop() {
         Odometry.getInstance().odometryTick();
+
         FtcDashboard.getInstance().getTelemetry().addData("X Pos:", Odometry.getInstance().getX());
         FtcDashboard.getInstance().getTelemetry().addData("Y Pos:", Odometry.getInstance().getY());
         FtcDashboard.getInstance().getTelemetry().addData("Yaw:", Gyro.getInstance().getYaw());
         FieldRenderer.renderRobot();
         FtcDashboard.getInstance().getTelemetry().update();
+
+        Vehicles.getInstance().setPosPID(
+                pX, iX, dX,
+                pY, iY, dY,
+                pYaw, iYaw, dYaw
+        );
 
         if (gamepad1.square) {
             Vehicles.getInstance().goTo(0, 0);
