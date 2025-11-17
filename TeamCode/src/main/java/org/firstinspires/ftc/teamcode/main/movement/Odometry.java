@@ -13,7 +13,7 @@ public final class Odometry {
     private final Gyro gyro = Gyro.getInstance();
     public double ticksX, ticksY, yaw;
     private double oldXOd, oldYOd;
-    public static double ticksPerCm = 543.6;
+    public static double ticksPerCm = 514;
     private boolean started = false;
     private double yawOffset = 0;
     private double dX = 0;
@@ -41,6 +41,7 @@ public final class Odometry {
     public void setPosition(double x, double y) {
         ticksX = x;
         ticksY = y;
+        started = false;
     }
 
     public void setPositionCm(double x, double y) {
@@ -49,6 +50,7 @@ public final class Odometry {
 
     public void setYaw(double yaw) {
         yawOffset = yaw - this.yaw;
+        started = false;
     }
 
     public void odometryTick() {
