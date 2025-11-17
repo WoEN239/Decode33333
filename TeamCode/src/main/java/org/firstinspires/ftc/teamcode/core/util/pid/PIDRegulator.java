@@ -10,6 +10,10 @@ public class PIDRegulator {
     private double iniegral_err = 0;
     private double old_err = 0;
 
+    public PIDRegulator() {
+
+    }
+
     public PIDRegulator(double KP, double KI, double KD) {
         this.KP = KP;
         this.KI = KI;
