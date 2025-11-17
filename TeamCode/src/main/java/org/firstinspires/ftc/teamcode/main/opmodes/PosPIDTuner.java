@@ -16,9 +16,11 @@ import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
 public class PosPIDTuner extends OpMode
 {
 
-    public static double pX = 0, iX = 0, dX = 0;
-    public static double pY = 0, iY = 0, dY = 0;
-    public static double pYaw = 0, iYaw = 0, dYaw = 0;
+    public static double pX = 0.07, iX = 0, dX = 0.1;
+    public static double pY = 0.07, iY = 0, dY = 0.1;
+    public static double pYaw = 0.03, iYaw = 0, dYaw = 0.12;
+
+    public static double targetX = 0, targetY = 100, targetYaw = 0;
 
 
     /*
@@ -38,6 +40,8 @@ public class PosPIDTuner extends OpMode
      */
     @Override
     public void init_loop() {
+        Odometry.getInstance().setPosition(0, 0);
+        Odometry.getInstance().setYaw(0);
     }
 
     /*
@@ -45,6 +49,8 @@ public class PosPIDTuner extends OpMode
      */
     @Override
     public void start() {
+        Odometry.getInstance().setPosition(0, 0);
+        Odometry.getInstance().setYaw(0);
     }
 
     /*
@@ -66,16 +72,21 @@ public class PosPIDTuner extends OpMode
                 pYaw, iYaw, dYaw
         );
 
-        if (gamepad1.square) {
-            Vehicles.getInstance().goTo(0, 0);
-        } else if (gamepad1.circle) {
-            Vehicles.getInstance().rotateTo(0);
-        } else if (gamepad1.triangle) {
+//        if (gamepad1.square) {
+//            Vehicles.getInstance().goTo(0, 0);
+//        } else if (gamepad1.circle) {
+//            Vehicles.getInstance().rotateTo(0);
+//        } else if (gamepad1.triangle) {
+//            Vehicles.getInstance().goTo(0, 0, 0);
+//        } else {
+//            Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y,
+//                    gamepad1.left_stick_x,
+//                    gamepad1.right_stick_x, true);
+//        }
+        if(((long) (System.nanoTime() / 1_000_000_000L)) % 6 < 3) {
             Vehicles.getInstance().goTo(0, 0, 0);
         } else {
-            Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y,
-                    gamepad1.left_stick_x,
-                    gamepad1.right_stick_x);
+            Vehicles.getInstance().goTo(targetX, targetY, targetYaw);
         }
     }
 
