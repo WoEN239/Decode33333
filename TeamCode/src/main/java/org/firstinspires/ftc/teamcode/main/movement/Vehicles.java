@@ -77,32 +77,10 @@ public final class Vehicles implements Initializable {
         rightBackMotor.setPower(0);
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public boolean moveToDirection(double forward, double horizontal, double turn) {
-        double deadZone = 0.1;
-        if (Math.abs(forward) < deadZone) forward = 0;
-        if (Math.abs(horizontal) < deadZone) horizontal = 0;
-        if (Math.abs(turn) < deadZone) turn = 0;
-
-        if(forward == 0 && horizontal == 0 && turn == 0) {
-            stopAll();
-            return false;
-        }
-
-        double frontLeftPower = Motor.normalizePower(forward + horizontal + turn);
-        double frontRightPower = Motor.normalizePower(forward - horizontal - turn);
-        double backLeftPower = Motor.normalizePower(forward - horizontal + turn);
-        double backRightPower = Motor.normalizePower(forward + horizontal - turn);
-
-        leftFrontMotor.setPower(frontLeftPower);
-        leftBackMotor.setPower(backLeftPower);
-        rightFrontMotor.setPower(frontRightPower);
-        rightBackMotor.setPower(backRightPower);
-
-        return true;
-    }
-
-    public boolean moveToDirectionNorm(double forward, double horizontal, double turn) {
+    public boolean moveToDirection(double forward,
+                                   double horizontal,
+                                   double turn,
+                                   boolean normalize) {
         double deadZone = 0.1;
         if (Math.abs(forward) < deadZone) forward = 0;
         if (Math.abs(horizontal) < deadZone) horizontal = 0;
@@ -126,20 +104,27 @@ public final class Vehicles implements Initializable {
 
         if(maxSpd > 1) {
             FtcDashboard.getInstance().getTelemetry().addData("Max motor speed", 1);
-            frontLeftPower /= maxSpd;
-            frontRightPower /= maxSpd;
-            backLeftPower /= maxSpd;
-            backRightPower /= maxSpd;
+            if(normalize) {
+                frontLeftPower /= maxSpd;
+                frontRightPower /= maxSpd;
+                backLeftPower /= maxSpd;
+                backRightPower /= maxSpd;
+            }
         } else {
             FtcDashboard.getInstance().getTelemetry().addData("Max motor speed", maxSpd);
         }
 
-        leftFrontMotor.setPower(frontLeftPower);
-        leftBackMotor.setPower(backLeftPower);
-        rightFrontMotor.setPower(frontRightPower);
-        rightBackMotor.setPower(backRightPower);
+        leftFrontMotor.setPower(Motor.normalizePower(frontLeftPower));
+        leftBackMotor.setPower(Motor.normalizePower(backLeftPower));
+        rightFrontMotor.setPower(Motor.normalizePower(frontRightPower));
+        rightBackMotor.setPower(Motor.normalizePower(backRightPower));
 
         return true;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public boolean moveToDirection(double forward, double horizontal, double turn) {
+        return moveToDirection(forward, horizontal, turn, false);
     }
 
     // coding by Timofei
@@ -161,7 +146,7 @@ public final class Vehicles implements Initializable {
             yawSpd = yawPosPID.PIDGet(-yawErr);
         }
 
-        return moveToDirectionNorm(xSpd, ySpd, yawSpd);
+        return moveToDirection(xSpd, ySpd, yawSpd, true);
     }
 
     @SuppressWarnings("UnusedReturnValue")
