@@ -34,7 +34,7 @@ public final class Odometry {
     // rotates vector clockwise in right-sided coordinate system
     @NonNull
     public static double[] rotateVector(double x, double y, double rot) {
-        double cos = Math.cos(rot), sin = Math.sin(rot);
+        double cos = Math.cos(rot*Gyro.DEG_TO_RAD), sin = Math.sin(rot*Gyro.DEG_TO_RAD);
         return new double[]{cos * x + sin * y, cos * y - sin * x};
     }
 
@@ -68,7 +68,7 @@ public final class Odometry {
         double dYaw = newYaw - yaw;
         dX -= ticksPerRotX * dYaw / 360;
         dY -= ticksPerRotY * dYaw / 360;
-        double[] deltaPos = rotateVector(dX, dY, (newYaw + yawOffset) * Gyro.DEG_TO_RAD);
+        double[] deltaPos = rotateVector(dX, dY, newYaw + yawOffset);
 
         ticksX += deltaPos[0];
         ticksY += deltaPos[1];

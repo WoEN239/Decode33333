@@ -49,7 +49,7 @@ public final class FieldRenderer {
                 -halfLength,  // back right
                 -halfLength,  // back left
                 +halfLength};  // front left
-        rotatePoints(xPoints, yPoints, robotYaw*Gyro.DEG_TO_RAD);
+        rotatePoints(xPoints, yPoints, robotYaw);
         shiftPoints(xPoints, yPoints, robotX, robotY);
 
         packet.fieldOverlay().setFill("blue");
