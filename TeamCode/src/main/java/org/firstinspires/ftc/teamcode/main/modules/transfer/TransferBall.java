@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.main.modules;
+package org.firstinspires.ftc.teamcode.main.modules.transfer;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -6,11 +6,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.core.device.servomotor.Servomotor;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
 import org.firstinspires.ftc.teamcode.core.device.motor.Motor;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @Config
 public class TransferBall implements Initializable {
-    private static final org.firstinspires.ftc.teamcode.main.modules.TransferBall INSTANCE = new org.firstinspires.ftc.teamcode.main.modules.TransferBall();
+    private static final TransferBall INSTANCE = new TransferBall();
     private final Motor motorFlow;
     private final Motor motorBrush;
     private final Servomotor servoToGun;
@@ -24,7 +23,7 @@ public class TransferBall implements Initializable {
         servoToGun = new Servomotor("servo_to_gun");
     }
 
-    public static org.firstinspires.ftc.teamcode.main.modules.TransferBall getInstance() { return INSTANCE; }
+    public static TransferBall getInstance() { return INSTANCE; }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {

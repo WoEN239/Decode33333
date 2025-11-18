@@ -7,7 +7,7 @@ public class PIDRegulator {
     private double KD = 0;
     private double KI = 0;
     public double setpoint = 0;
-    private double iniegral_err = 0;
+    private double integral_err = 0;
     private double old_err = 0;
 
     public PIDRegulator(double KP, double KI, double KD) {
@@ -31,17 +31,17 @@ public class PIDRegulator {
     public double PIDGet(double input, double setpoint){
         double err = input - setpoint;
         double d = this.old_err - err;
-        double i = this.iniegral_err;
+        double i = this.integral_err;
         this.old_err = err;
-        this.iniegral_err += err;
+        this.integral_err += err;
         return err * this.KP + d * this.KD + i * this.KI;
     }
     public double PIDGet(double input){
         double err = this.setpoint - input;
         double d = this.old_err - err;
-        double i = this.iniegral_err;
+        double i = this.integral_err;
         this.old_err = err;
-        this.iniegral_err += err;
+        this.integral_err += err;
         return err * this.KP + d * this.KD + i * this.KI;
     }
 

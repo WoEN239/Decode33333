@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.main.opencv;
 
 import android.util.Size;
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -12,11 +10,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
-import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
-import org.firstinspires.ftc.teamcode.main.modules.GunControl;
-import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
-import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
+import org.firstinspires.ftc.teamcode.main.modules.gun.GunControl;
+import org.firstinspires.ftc.teamcode.main.modules.transfer.TransferBall;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.main.modules;
+package org.firstinspires.ftc.teamcode.main.modules.gun;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -7,8 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.teamcode.core.device.motor.FFEncoderMotor;
 import org.firstinspires.ftc.teamcode.core.device.servomotor.Servomotor;
 import org.firstinspires.ftc.teamcode.core.device.trait.Initializable;
-import org.firstinspires.ftc.teamcode.core.device.motor.EncoderMotor;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage;
@@ -17,11 +16,11 @@ import org.firstinspires.ftc.teamcode.core.device.sensor.SensorVoltage;
 
 @Config
 public final class GunControl implements Initializable {
-    private static final org.firstinspires.ftc.teamcode.main.modules.GunControl INSTANCE = new org.firstinspires.ftc.teamcode.main.modules.GunControl();
+    private static final GunControl INSTANCE = new GunControl();
     public ElapsedTime runtime = new ElapsedTime();
     private final FFEncoderMotor motorLeft;
     private final Servomotor servo;
-    public static double velocity = -1100;
+    public static double velocity = -1000;
     public static double degreeTower = 0.35;
 
     public static double p = 0.009;
@@ -35,7 +34,7 @@ public final class GunControl implements Initializable {
         servo = new Servomotor("servo_turn_tower");
     }
 
-    public static org.firstinspires.ftc.teamcode.main.modules.GunControl getInstance() { return INSTANCE; }
+    public static GunControl getInstance() { return INSTANCE; }
 
     @Override
     public void initialize(HardwareMap hardwareMap) {
@@ -50,6 +49,10 @@ public final class GunControl implements Initializable {
 
     public double getVelocity() {
         return velocity;
+    }
+
+    public void setVelocity(double velocityff) {
+        this.velocity = velocity;
     }
 
     public void startShot() {

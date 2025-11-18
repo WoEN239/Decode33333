@@ -2,13 +2,12 @@ package org.firstinspires.ftc.teamcode.main.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.core.device.single.Gyro;
 import org.firstinspires.ftc.teamcode.main.movement.Odometry;
 import org.firstinspires.ftc.teamcode.main.movement.Vehicles;
-import org.firstinspires.ftc.teamcode.main.modules.GunControl;
-import org.firstinspires.ftc.teamcode.main.modules.TransferBall;
+import org.firstinspires.ftc.teamcode.main.modules.gun.GunControl;
+import org.firstinspires.ftc.teamcode.main.modules.transfer.TransferBall;
 import org.firstinspires.ftc.teamcode.main.opencv.Vision;
 
 // coding by Matvey Ivanovv
@@ -17,14 +16,11 @@ import org.firstinspires.ftc.teamcode.main.opencv.Vision;
     EDGE - ПОБЕДА!
  */
 
-@TeleOp(name="TeleOp", group="Dev")
-public class BasicMovement extends OpMode
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name="TeleOp", group="Dev")
+public class TeleOp extends OpMode
 {
     // Declare OpMode members.
     private final ElapsedTime runtime = new ElapsedTime();
-    private GunControl gun;
-    private TransferBall transfer;
-    private Vision vision;
     public static double degreeGunTower = 0;
     public boolean stateFlow = false;
     private int countBall = 0;
@@ -45,7 +41,7 @@ public class BasicMovement extends OpMode
                 GunControl.getInstance().isInitialized() &&
                 Vision.getInstance().isInitialized() &&
                 Gyro.getInstance().isInitialized())
-        { telemetry.addData("Status", "Initialized"); }
+        { FtcDashboard.getInstance().getTelemetry().addData("Status", "Initialized"); }
 //        Vision.getInstance().startStreaming();
     }
 
@@ -84,9 +80,9 @@ public class BasicMovement extends OpMode
         FtcDashboard.getInstance().getTelemetry().addData("Yaw:", Gyro.getInstance().getYaw());
         FtcDashboard.getInstance().getTelemetry().update();
 
-        Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y * kDrive,
-                gamepad1.left_stick_x * kDrive,
-                (gamepad1.right_stick_x - 0.2) * kDrive);
+        Vehicles.getInstance().moveToDirection(-gamepad1.left_stick_y,
+                gamepad1.left_stick_x,
+                gamepad1.right_stick_x);
 
         GunControl.getInstance().startShot();
         TransferBall.getInstance().startBrush();
@@ -116,11 +112,11 @@ public class BasicMovement extends OpMode
         } else {
             TransferBall.getInstance().stopFlow();
         }
-        if (gamepad1.right_bumper) {
-            autoGunBall(800, 950);
-        } else {
-            TransferBall.getInstance().stopFlow();
-        }
+//        if (gamepad1.right_bumper) {
+//            autoGunBall(-860, 1200);
+//        } else {
+//            TransferBall.getInstance().stopFlow();
+//        }
     }
 
     /*
@@ -140,7 +136,6 @@ public class BasicMovement extends OpMode
         while (countBall < 2) {
             GunControl.getInstance().startShot();
             TransferBall.getInstance().startFlow();
-
             if (GunControl.getInstance().getSpeedGun() < -860) {
                 runtime.reset();
                 while (runtime.milliseconds() < 600) {

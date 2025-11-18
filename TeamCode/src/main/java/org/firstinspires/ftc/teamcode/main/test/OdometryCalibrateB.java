@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.main.opmodes;
+package org.firstinspires.ftc.teamcode.main.test;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -44,7 +44,7 @@ public class OdometryCalibrateB extends OpMode
         zeroOdometerY = Vehicles.getInstance().getPositionOdometerY();
         zeroYaw = Gyro.getInstance().getYaw();
         runtime.reset();
-        FtcDashboard.getInstance().getTelemetry().addLine("Move the robot 45 centimeters (robot's width) right and check the TicksPerCm value");
+        FtcDashboard.getInstance().getTelemetry().addLine("Move the robot across the field and check the TicksPerCm value");
     }
 
     /*
@@ -55,7 +55,7 @@ public class OdometryCalibrateB extends OpMode
         FtcDashboard.getInstance().getTelemetry().addData("OdometerX:", Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX);
         FtcDashboard.getInstance().getTelemetry().addData("OdometerY:", Vehicles.getInstance().getPositionOdometerY() - zeroOdometerY);
         FtcDashboard.getInstance().getTelemetry().addData("Yaw:", Gyro.getInstance().getYaw() - zeroYaw);
-        FtcDashboard.getInstance().getTelemetry().addData("TicksPerCm:", (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX) / 45.0);
+        FtcDashboard.getInstance().getTelemetry().addData("TicksPerCm:", (Vehicles.getInstance().getPositionOdometerX() - zeroOdometerX) / (366.0 - 45.0));
         FtcDashboard.getInstance().getTelemetry().update();
 
         Vehicles.getInstance().moveToDirection(0, gamepad1.left_stick_x, 0);
